@@ -13,6 +13,9 @@ const artistSchema=new mongoose.Schema({
         required:true,
         unique:true
     },
+    email:{
+        type:String
+    },
     profilePhoto:{
         type:String,
         default:"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"
@@ -39,7 +42,31 @@ const artistSchema=new mongoose.Schema({
         message:{
             type:String
         }
-    }]
+    }],
+    address:{
+        type:String
+    },
+    assignedEmployee:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'employee'
+    },
+    appName:{
+        type:String
+    },
+    accountNo:{
+        type:String
+    },
+    ifscCode:{
+        type:String
+    },
+    upiId:{
+        type:String
+    },
+    blocked:{
+        type:Boolean,
+        default:false
+    }
+
 },{timestamps:true})
 
 artistSchema.pre("save",async function(next){
