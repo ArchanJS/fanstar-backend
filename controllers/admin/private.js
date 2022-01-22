@@ -2,6 +2,7 @@ const Artist=require('../../models/Artist');
 const User=require('../../models/User');
 const Employee=require('../../models/Employee');
 const Service=require('../../models/Service');
+const Album=require('../../models/Album');
 
 //Get artists
 exports.getAllArtists=async(req,res)=>{
@@ -58,28 +59,128 @@ exports.createArtist=async(req,res)=>{
     }
 }
 
-//Block artist
-exports.blockArtist=async(req,res)=>{
-    try {
-        await findOneAndUpdate({_id:req.params.artistId},{
-            $set:{
-                blocked:true
-            }
-        })
-        res.status(200).json({message:"Artist blocked!"});
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({error:"Something went wrong!"});
-    }
-}
-
-//Unblock artist
+//Block-unblock artist
 exports.blockUnblockArtist=async(req,res)=>{
     try {
         const artist=await Artist.findOne({_id:req.body.artistId});
         let blocked=artist.blocked?false:true;
         let message=artist.blocked?"Artist unblocked":"Artist blocked";
         await Artist.findOneAndUpdate({_id:req.body.artistId},{
+            $set:{
+                blocked
+            }
+        })
+        res.status(200).json({message});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Something went wrong!"});
+    }
+}
+
+//Get an artist
+exports.getAnArtist=async(req,res)=>{
+    try {
+        const artist=await Artist.findOne({_id:req.params.artistId});
+        if(!artist) res.status(400).json({error:"No artist found!"});
+        else res.status(200).send(artist);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Something went wrong!"});
+    }
+}
+
+//Update an artist
+exports.updateAnArtist=async(req,res)=>{
+    try {
+        const {username,phone,email,address,assignedEmployee,appName,accountNo,ifscCode,upiId}=req.body;
+        await Artist.findOneAndUpdate({_id:req.params.artistId},{
+            $set:{
+                username,phone,email,address,assignedEmployee,appName,accountNo,ifscCode,upiId
+            }
+        })
+        res.status(200).json({message:"User updated!"});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Somehting went wrong!"});
+    }
+}
+
+//Delete an artist
+exports.deleteAnArtist=async(req,res)=>{
+    try {
+        await Album.deleteMany({postedBy:req.params.artistId});
+        await Service.deleteMany({createdBy:req.params.artistId});
+        await Artist.deleteOne({_id:req.params.artistId});
+        res.status(200).json({message:"Artist's account deleted!"});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Somehting went wrong!"});
+    }
+}
+
+//Get an employee
+exports.getAnEmployee=async(req,res)=>{
+    try {
+        const employee=await Employee.findOne({_id:req.params.employeeId});
+        if(!employee) res.status(400).json({error:"No employee found!"});
+        else res.status(200).send(employee);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Somehting went wrong!"});
+    }
+}
+
+//Create employee
+exports.createAnEmployee=async(req,res)=>{
+    try {
+        const {username,phone,email,address,accountNo,ifscCode,upiId}=req.body;
+        let employee=await Employee.findOne({phone});
+        if(employee) res.status(400).json({error:"Employee already exists!"});
+        else {
+            employee=new Employee({username,phone,email,address,accountNo,ifscCode,upiId});
+            await employee.save();
+            res.status(201).json({message:"Employee account created!"});
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Somehting went wrong!"});
+    }
+}
+
+//Update an Employee
+exports.updateAnEmployee=async(req,res)=>{
+    try {
+        const {username,phone,email,address,accountNo,ifscCode,upiId}=req.body;
+        await Employee.findOneAndUpdate({_id:req.params.employeeId},{
+            $set:{
+                username,phone,email,address,accountNo,ifscCode,upiId
+            }
+        })
+        res.status(200).json({message:"Employee profile updated!"});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Somehting went wrong!"});
+    }
+}
+
+//Delete an employee
+exports.deleteAnEmployee=async(req,res)=>{
+    try {
+        await Employee.deleteOne({_id:req.params.employeeId});
+        res.status(200).json({message:"Employee account deleted!"});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Somehting went wrong!"});
+    }
+}
+
+//Block-unblock employee
+exports.blockUnblockEmployee=async(req,res)=>{
+    try {
+        const employee=await Employee.findOne({_id:req.body.employeeId});
+        let blocked=employee.blocked?false:true;
+        let message=employee.blocked?"Employee unblocked":"Employee blocked";
+        await Employee.findOneAndUpdate({_id:req.body.employeeId},{
             $set:{
                 blocked
             }

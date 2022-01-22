@@ -19,6 +19,9 @@ const employeeSchema=new mongoose.Schema({
     gender:{
         type:String
     },
+    address:{
+        type:String
+    },
     balance:{
         type:String,
         default:"0.00"
@@ -26,6 +29,19 @@ const employeeSchema=new mongoose.Schema({
     profilePhoto:{
         type:String,
         default:"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"
+    },
+    accountNo:{
+        type:String
+    },
+    ifscCode:{
+        type:String
+    },
+    upiId:{
+        type:String
+    },
+    blocked:{
+        type:Boolean,
+        default:false
     }
 },{timestamps:true})
 
