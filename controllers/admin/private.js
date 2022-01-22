@@ -3,6 +3,7 @@ const User=require('../../models/User');
 const Employee=require('../../models/Employee');
 const Service=require('../../models/Service');
 const Album=require('../../models/Album');
+const Payment=require('../../models/Payment');
 
 //Get artists
 exports.getAllArtists=async(req,res)=>{
@@ -186,6 +187,17 @@ exports.blockUnblockEmployee=async(req,res)=>{
             }
         })
         res.status(200).json({message});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Something went wrong!"});
+    }
+}
+
+//Get payments
+exports.getAllPayments=async(req,res)=>{
+    try {
+        const payments=await Payment.find().populate("artistId");
+        res.status(200).send(payments);
     } catch (error) {
         console.log(error);
         res.status(500).json({error:"Something went wrong!"});

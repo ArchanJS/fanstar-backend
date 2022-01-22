@@ -2,6 +2,7 @@ const User = require('../../models/User');
 const Artist = require('../../models/Artist');
 const Service = require('../../models/Service');
 const Album=require('../../models/Album');
+const Payment=require('../../models/Payment');
 const {readImage}=require('../../controllers/artist/aws');
 const Razorpay = require('razorpay');
 const request = require('request');
@@ -142,6 +143,8 @@ exports.buyServices = async (req, res) => {
             balance: uBalance
           }
         })
+        const payment=new Payment({artistId:service.createdBy,userId:req.user,serviceId:service._id,status:"pending"});
+        await payment.save();
         res.status(200).json({ message: "Service added!" });
       }
       else res.status(400).json({ error: "User doesn't have enough balance!" });
