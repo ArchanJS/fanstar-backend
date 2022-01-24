@@ -4,7 +4,7 @@ const bcryptjs=require('bcryptjs');
 
 const artistSchema=new mongoose.Schema({
     username:{
-        Type:String
+        type:String
     },
     phone:{
         type:String,

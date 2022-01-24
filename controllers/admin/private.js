@@ -42,6 +42,7 @@ exports.getAllEmployees=async(req,res)=>{
 exports.createArtist=async(req,res)=>{
     try {
         const {username,phone,email,address,assignedEmployee,appName,accountNo,ifscCode,upiId,services}=req.body;
+        console.log(username);
         const exists=await Artist.findOne({phone});
         if(exists) res.status(400).json({error:"Artist already exists!"});
         else{
