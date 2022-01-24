@@ -91,6 +91,18 @@ exports.getAnArtist=async(req,res)=>{
     }
 }
 
+//Get no. of total and pedning orders of an artist
+exports.getOrdersofAnArtist=async(req,res)=>{
+    try {
+        const totalOrders=await Payment.find({artistId:req.params.artistId});
+        const pendingOrders=await Payment.find({artistId:req.params.artistId,status:"pending"});
+        res.status(200).json({totalOrders:totalOrders.length,pendingOrders:pendingOrders.length});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Something went wrong!"});
+    }
+}
+
 //Update an artist
 exports.updateAnArtist=async(req,res)=>{
     try {
