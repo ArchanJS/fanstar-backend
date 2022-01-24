@@ -224,6 +224,54 @@ exports.buyAlbum=async (req, res) => {
   }
 }
 
+//Subscribe
+exports.subscribe=async (req, res) => {
+  try {
+    const { artistId } = req.body;
+    const albums = await Album.find({ postedBy: artistId });
+    if (albums.length==0) res.status(400).json({ error: "No album exists!" });
+    else {
+      let uBalance = parseFloat(req.user.balance);
+      let albumPrice = 0;
+      albums.forEach(e=>{
+        albumPrice+=parseFloat(e.price);
+      })
+      if (uBalance >= albumPrice) {
+        await Album.updateMany({ postedBy: artistId }, {
+          $push: {
+            accessedBy: {userId:req.user._id,time:moment().format(),subscriber:true}
+          }
+        })
+        const artist = await Artist.findOne({ _id: artistId });
+        let aBalance = parseFloat(artist.balance);
+        aBalance = aBalance + (albumPrice * 70.00 / 100.00);
+        aBalance = aBalance.toString();
+        await Artist.updateOne({ _id: artistId }, {
+          $set: {
+            balance: aBalance
+          }
+        })
+        uBalance = uBalance - albumPrice;
+        uBalance = uBalance.toString();
+        await User.updateOne({ _id: req.user._id }, {
+          $set: {
+            balance: uBalance
+          }
+        })
+        albumPrice=albumPrice.toString();
+        const payment=new Payment({artistId,userId:req.user._id,amount:albumPrice,status:"pending"});
+        await payment.save();
+        res.status(200).json({ message: "Subscription added!" });
+      }
+      else res.status(400).json({ error: "User doesn't have enough balance!" });
+
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Something went wrong!" });
+  }
+}
+
 //Remove album access
 exports.removeAlbumAccess=async(req,res)=>{
   try {
@@ -233,6 +281,21 @@ exports.removeAlbumAccess=async(req,res)=>{
       }
     })
     res.status(200).json({message:"Access removed!"});
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({error:"Something went wrong!"});
+  }
+}
+
+//Unsubscribe
+exports.unsubscribe=async(req,res)=>{
+  try {
+    await Album.updateMany({postedBy:req.body.artistId},{
+      $pull:{
+        accessedBy:{userId:req.user._id}
+      }
+    })
+    res.status(200).json({message:"Unsubscribed!"});
   } catch (error) {
     console.log(error);
     res.status(500).json({error:"Something went wrong!"});

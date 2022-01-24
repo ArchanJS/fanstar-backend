@@ -1,5 +1,5 @@
 const router=require('express').Router();
-const {buyServices,order,capture,buyAlbum,getArtist,getAService,readFile,getOwnDetails,getAlbum,giveFeedback,removeAlbumAccess,getAlbumTimestamp}=require('../../controllers/user/private');
+const {buyServices,order,capture,buyAlbum,getArtist,getAService,readFile,getOwnDetails,getAlbum,giveFeedback,removeAlbumAccess,getAlbumTimestamp,subscribe, unsubscribe}=require('../../controllers/user/private');
 const {protectUser}=require('../../middlewares/protect');
 
 //Get own details
@@ -16,7 +16,7 @@ router.get('/getowndetails',protectUser,getOwnDetails);
 //Body : N/A
 //Params : {artistId}
 //Token : Yes
-router.get('/getartist/:artistId',protectUser,getArtist);
+router.get('/getartist/:artistId',getArtist);
 
 //Get an album
 //Route : '/api/user/private/getalbum/:albumId'
@@ -97,5 +97,21 @@ router.put('/removealbumaccess',protectUser,removeAlbumAccess);
 //Params : N/A
 //Token : Yes
 router.post('/givefeedback',protectUser,giveFeedback);
+
+//Subscribe to a user's album
+//Route : '/api/user/private/subscribe'
+//Method : PUT
+//Body : {artistId}
+//Params : N/A
+//Token : Yes
+router.put('/subscribe',protectUser,subscribe);
+
+//Unsubscribe to a user's album
+//Route : '/api/user/private/unsubscribe'
+//Method : PUT
+//Body : {artistId}
+//Params : N/A
+//Token : Yes
+router.put('/unsubscribe',protectUser,unsubscribe);
 
 module.exports=router;

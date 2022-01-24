@@ -13,7 +13,10 @@ const paymentSchema=new mongoose.Schema({
     },
     serviceId:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'service',
+        ref:'service'
+    },
+    amount:{
+        type:String,
         required:true
     },
     status:{

@@ -26,6 +26,10 @@ const albumSchema=new mongoose.Schema({
         },
         time:{
             type:String
+        },
+        subscriber:{
+            type:Boolean,
+            default:false
         }
     }]
 },{timestamps:true})
