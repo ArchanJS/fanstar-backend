@@ -1,6 +1,6 @@
 const router=require('express').Router();
 const{protectAdmin}=require('../../middlewares/protect');
-const {getAllArtists,getAllUsers,getAllEmployees, createArtist, blockUnblockArtist, getAnArtist, updateAnArtist, deleteAnArtist, createAnEmployee, blockUnblockEmployee, getAnEmployee, updateAnEmployee, deleteAnEmployee,getAllPayments,getOrdersofAnArtist}=require('../../controllers/admin/private');
+const {getAllArtists,getAllUsers,getAllEmployees, createArtist, blockUnblockArtist, getAnArtist, updateAnArtist, deleteAnArtist, createAnEmployee, blockUnblockEmployee, getAnEmployee, updateAnEmployee, deleteAnEmployee,getAllPayments,getOrdersofAnArtist,getPaymentOfAnArtist}=require('../../controllers/admin/private');
 
 //Get all artists
 //Route : '/api/admin/private/getallartists'
@@ -130,5 +130,13 @@ router.get('/getallpayments',protectAdmin,getAllPayments);
 //Params : {artistId}
 //Token : Yes
 router.get('/getordersofartist/:artistId',protectAdmin,getOrdersofAnArtist);
+
+//Get payments of a particular artist
+//Route : '/api/admin/private/getpayments/:artistId'
+//Method : GET
+//Body : N/A
+//Params : {artistId}
+//Token : Yes
+router.get('/getpayments/:artistId',protectAdmin,getPaymentOfAnArtist);
 
 module.exports=router;

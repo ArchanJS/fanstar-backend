@@ -103,6 +103,17 @@ exports.getOrdersofAnArtist=async(req,res)=>{
     }
 }
 
+//Get payments of a particular artist
+exports.getPaymentOfAnArtist=async(req,res)=>{
+    try {
+        const payments=await Payment.find({artistId:req.params.artistId});
+        res.status(200).send(payments);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Something went wrong!"});
+    }
+}
+
 //Update an artist
 exports.updateAnArtist=async(req,res)=>{
     try {

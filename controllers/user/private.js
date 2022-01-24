@@ -213,6 +213,8 @@ exports.buyAlbum=async (req, res) => {
             balance: uBalance
           }
         })
+        const payment=new Payment({artistId:album.postedBy,userId:req.user._id,amount:albumPrice,isAlbum:true,status:"completed"});
+        await payment.save();
         res.status(200).json({ message: "Album accessed!" });
       }
       else res.status(400).json({ error: "User doesn't have enough balance!" });
@@ -295,7 +297,7 @@ exports.unsubscribe=async(req,res)=>{
         accessedBy:{userId:req.user._id}
       }
     })
-    await Payment.updateOne({artistId:req.body.artistId,userId:req.user._id,isAlbum:true},{
+    await Payment.updateMany({artistId:req.body.artistId,userId:req.user._id,isAlbum:true},{
       $set:{
         status:"completed"
       }
