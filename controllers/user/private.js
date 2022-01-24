@@ -259,7 +259,7 @@ exports.subscribe=async (req, res) => {
           }
         })
         albumPrice=albumPrice.toString();
-        const payment=new Payment({artistId,userId:req.user._id,amount:albumPrice,status:"pending"});
+        const payment=new Payment({artistId,userId:req.user._id,amount:albumPrice,isAlbum:true,status:"pending"});
         await payment.save();
         res.status(200).json({ message: "Subscription added!" });
       }
@@ -293,6 +293,11 @@ exports.unsubscribe=async(req,res)=>{
     await Album.updateMany({postedBy:req.body.artistId},{
       $pull:{
         accessedBy:{userId:req.user._id}
+      }
+    })
+    await Payment.updateOne({artistId:req.body.artistId,userId:req.user._id,isAlbum:true},{
+      $set:{
+        status:"completed"
       }
     })
     res.status(200).json({message:"Unsubscribed!"});

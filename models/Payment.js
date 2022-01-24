@@ -19,6 +19,10 @@ const paymentSchema=new mongoose.Schema({
         type:String,
         required:true
     },
+    isAlbum:{
+        type:Boolean,
+        default:false
+    },
     status:{
         type:String,
         requierd:true
