@@ -265,3 +265,14 @@ exports.getArtistsOfAnEmployee=async(req,res)=>{
         res.status(500).json({error:"Something went wrong!"});
     }
 }
+
+//Get total no. of subscribers
+exports.getTotalSubscribers=async(req,res)=>{
+    try {
+        const users=await User.find();
+        res.status(200).send(users.length.toString());
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Something went wrong!"});
+    }
+}

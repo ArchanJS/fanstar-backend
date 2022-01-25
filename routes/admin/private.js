@@ -1,6 +1,6 @@
 const router=require('express').Router();
 const{protectAdmin}=require('../../middlewares/protect');
-const {getAllArtists,getAllUsers,getAllEmployees, createArtist, blockUnblockArtist, getAnArtist, updateAnArtist, deleteAnArtist, createAnEmployee, blockUnblockEmployee, getAnEmployee, updateAnEmployee, deleteAnEmployee,getAllPayments,getOrdersofAnArtist,getPaymentOfAnArtist, getListOfArtist, getArtistsOfAnEmployee}=require('../../controllers/admin/private');
+const {getAllArtists,getAllUsers,getAllEmployees, createArtist, blockUnblockArtist, getAnArtist, updateAnArtist, deleteAnArtist, createAnEmployee, blockUnblockEmployee, getAnEmployee, updateAnEmployee, deleteAnEmployee,getAllPayments,getOrdersofAnArtist,getPaymentOfAnArtist, getListOfArtist, getArtistsOfAnEmployee,getTotalSubscribers}=require('../../controllers/admin/private');
 
 //Get all artists
 //Route : '/api/admin/private/getallartists'
@@ -154,5 +154,13 @@ router.get('/getlistofartists',protectAdmin,getListOfArtist);
 //Params : {employeeId}
 //Token : Yes
 router.get('/getartistsofanemployee/:employeeId',protectAdmin,getArtistsOfAnEmployee);
+
+//Get total subscribers
+//Route : '/api/admin/private/gettotalsubscribers'
+//Method : GET
+//Body : N/A
+//Params : {employeeId}
+//Token : Yes
+router.get('/gettotalsubscribers',protectAdmin,getTotalSubscribers);
 
 module.exports=router;
