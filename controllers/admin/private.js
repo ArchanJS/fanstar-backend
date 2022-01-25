@@ -233,20 +233,39 @@ exports.getListOfArtist=async(req,res)=>{
     try {
         const retArr=[];
         const artists=await Artist.find();
-        artists.forEach(async e=>{
-            const totalOrders=await Payment.find({artistId:e._id});
-            const pendingOrders=await Payment.find({artistId:e._id,status:"pending"});
-            const artist={
-                artistId:e._id,
-                artistName:e.username,
-                startDate:e.createdAt,
-                address:e.address,
-                totalOrders:totalOrders.length,
-                pendingOrders:pendingOrders.length
+        const payments=await Payment.find();
+        for(let i=0;i<artists.length;i++){
+            let totalOrders=0;
+            let pendingOrders=0;
+            for(let j=0;j<payments.length;j++){
+                if(artists[i]._id.toString().trim()==payments[j].artistId.toString().trim()){
+                    totalOrders++;
+                    if(payments[j].status=="pending") pendingOrders++;
+                }
             }
-            console.log(artist);
-            retArr.push(artist);
-        })
+            retArr.push({
+                artistId:artists[i]._id,
+                artistName:artists[i].username,
+                startDate:artists[i].createdAt,
+                address:artists[i].address,
+                totalOrders,
+                pendingOrders
+            });
+        }
+        // artists.forEach(async e=>{
+        //     // const totalOrders=await Payment.find({artistId:e._id});
+        //     // const pendingOrders=await Payment.find({artistId:e._id,status:"pending"});
+        //     const artist={
+        //         artistId:e._id,
+        //         artistName:e.username,
+        //         startDate:e.createdAt,
+        //         address:e.address,
+        //         // totalOrders:totalOrders.length,
+        //         // pendingOrders:pendingOrders.length
+        //     }
+        //     console.log(artist);
+        //     retArr.push(artist);
+        // })
         console.log(retArr);
         res.status(200).send(retArr);
     } catch (error) {
