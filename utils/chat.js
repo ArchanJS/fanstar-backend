@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Message = require('../models/chat');
+const Message = require('../models/Chat');
 // const Socket=require('../models/Socket');
 const { successmessage, errormessage } = require('../utils/util');
 
