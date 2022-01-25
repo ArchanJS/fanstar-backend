@@ -1,6 +1,6 @@
 const router=require('express').Router();
 const{protectAdmin}=require('../../middlewares/protect');
-const {getAllArtists,getAllUsers,getAllEmployees, createArtist, blockUnblockArtist, getAnArtist, updateAnArtist, deleteAnArtist, createAnEmployee, blockUnblockEmployee, getAnEmployee, updateAnEmployee, deleteAnEmployee,getAllPayments,getOrdersofAnArtist,getPaymentOfAnArtist}=require('../../controllers/admin/private');
+const {getAllArtists,getAllUsers,getAllEmployees, createArtist, blockUnblockArtist, getAnArtist, updateAnArtist, deleteAnArtist, createAnEmployee, blockUnblockEmployee, getAnEmployee, updateAnEmployee, deleteAnEmployee,getAllPayments,getOrdersofAnArtist,getPaymentOfAnArtist, getListOfArtist, getArtistsOfAnEmployee}=require('../../controllers/admin/private');
 
 //Get all artists
 //Route : '/api/admin/private/getallartists'
@@ -138,5 +138,21 @@ router.get('/getordersofartist/:artistId',protectAdmin,getOrdersofAnArtist);
 //Params : {artistId}
 //Token : Yes
 router.get('/getpayments/:artistId',protectAdmin,getPaymentOfAnArtist);
+
+//Get list of artists
+//Route : '/api/admin/private/getlistofartists'
+//Method : GET
+//Body : N/A
+//Params : N/A
+//Token : Yes
+router.get('/getlistofartists',protectAdmin,getListOfArtist);
+
+//Get artists of an employee
+//Route : '/api/admin/private/getartistofanemployee/:employeeId'
+//Method : GET
+//Body : N/A
+//Params : {employeeId}
+//Token : Yes
+router.get('/getartistsofanemployee/:employeeId',protectAdmin,getArtistsOfAnEmployee);
 
 module.exports=router;

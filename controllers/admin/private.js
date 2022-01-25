@@ -227,3 +227,41 @@ exports.getAllPayments=async(req,res)=>{
         res.status(500).json({error:"Something went wrong!"});
     }
 }
+
+//Get list of artists
+exports.getListOfArtist=async(req,res)=>{
+    try {
+        const retArr=[];
+        const artists=await Artist.find();
+        artists.forEach(async e=>{
+            const totalOrders=await Payment.find({artistId:e._id});
+            const pendingOrders=await Payment.find({artistId:e._id,status:"pending"});
+            const artist={
+                artistId:e._id,
+                artistName:e.username,
+                startDate:e.createdAt,
+                address:e.address,
+                totalOrders:totalOrders.length,
+                pendingOrders:pendingOrders.length
+            }
+            console.log(artist);
+            retArr.push(artist);
+        })
+        console.log(retArr);
+        res.status(200).send(retArr);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Something went wrong!"});
+    }
+}
+
+//Get artists of an employee
+exports.getArtistsOfAnEmployee=async(req,res)=>{
+    try {
+        const artists=await Artist.find({assignedEmployee:req.params.employeeId});
+        res.status(200).send(artists);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Something went wrong!"});
+    }
+}
