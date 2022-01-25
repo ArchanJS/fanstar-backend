@@ -13,7 +13,7 @@ const messageSchema = new mongoose.Schema(
             sender: mongoose.Types.ObjectId,
             reciever: mongoose.Types.ObjectId,
             message: String,
-            created: { type: Date, default: Date.now }
+            created: { type: Date, default: Date.now() }
         }]
     },
     {
@@ -21,4 +21,4 @@ const messageSchema = new mongoose.Schema(
         timestamps: true
     }
 )
-module.exports = mongoose.model('messages', messageSchema);
+module.exports = mongoose.model('messages', messageSchema)

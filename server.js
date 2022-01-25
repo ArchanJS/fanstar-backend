@@ -8,7 +8,7 @@ const morgan=require('morgan');
 const mongoose = require('mongoose');
 const http = require('http');
 const socketio = require('socket.io');
-let { checkroom, addinroom, storeMessage,userunmatched } = require('./controllers/chat/chat');
+let { storeMessage, getMessages } = require('./utils/chat');
 const SocketModel=require('./models/Socket');
 const { Socket } = require('dgram');
 
@@ -50,26 +50,32 @@ io.on('connection', (socket) => {
 
 
 	// whenever someone joins store or update their socketid in database
-	socket.on('updatesocketid',async(userid)=>{
-		let isMatch=await SocketModel.findOne({userid:mongoose.Types.ObjectId(userid)});
-		if(!isMatch){
-			let socketdata=new SocketModel({
-				userid:mongoose.Types.ObjectId(userid),
-				socketid:socket.id
+	socket.on('updatesocketid', async (userid) => {
+		let isMatch = await SocketModel.findOne({ userid: mongoose.Types.ObjectId(userid) });
+		if (!isMatch) {
+			let socketdata = new SocketModel({
+				userid: mongoose.Types.ObjectId(userid),
+				socketid: socket.id
 			})
 			await socketdata.save();
-		}else{
-			let updates={
-				socketid:socket.id
+		} else {
+			let updates = {
+				socketid: socket.id
 			}
-			await SocketModel.findOneAndUpdate({userid:mongoose.Types.ObjectId(userid)},{$set:updates});
+			await SocketModel.findOneAndUpdate({ userid: mongoose.Types.ObjectId(userid) }, { $set: updates });
 		}
+		let messages = await getMessages(userid); //getting messages of the user who has joined .
+		socket.emit('messages', messages);
+
 	})
 
-	socket.on('privatemessage',async({user1,user2,message})=>{
-			let socketdata=await SocketModel.findOne({userid:mongoose.Types.ObjectId(user2)});
-			socket.to(socketdata.socketid).emit('privatemessage',message);
-			await storeMessage(message, user1, user2);
+	socket.on('privatemessage', async ({ user1, user2, message }) => {
+		console.log('inside', user1, user2, message);
+		await storeMessage(message, user1, user2);
+		let socketdata = await SocketModel.findOne({ userid: mongoose.Types.ObjectId(user2) });
+		if (socketdata) { // if only one is online then only send him the message otherwise just store his messages.
+			socket.to(socketdata.socketid).emit('privatemessage', message);
+		}
 	})
 
 
@@ -94,11 +100,10 @@ io.on('connection', (socket) => {
 	// 	socket.broadcast.to(roomid).emit('message', message);
 	// })
 
-	// when one user unmatched the other
-	socket.on('disconnect', async function (roomid) {
-		console.log(' user unmatched ');
-		await userunmatched(roomid);
-		socket.broadcast.to(roomid).emit("userunmatched");
+	socket.on('disconnect', async function () {
+		console.log('disconnected');
+	    // when user goes offline delete his socketid from db so that we can know which user is online or offline
+		await SocketModel.findOneAndDelete({socketid:socket.id});
 	});
 })
 
