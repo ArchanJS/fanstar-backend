@@ -27,7 +27,12 @@ exports.getOwnDetails=async(req,res)=>{
 //Get an artist
 exports.getArtist=async(req,res)=>{
   try {
-    const artist=await Artist.findOne({_id:req.params.artistId});
+    let artist=await Artist.findOne({_id:req.params.artistId});
+    artist=await Artist.findOneAndUpdate({_id:req.params.artistId},{
+      $set:{
+        appVisits:artist.appVisits+1
+      }
+    },{new:true})
     res.status(200).send(artist);
   } catch (error) {
     console.log(error);

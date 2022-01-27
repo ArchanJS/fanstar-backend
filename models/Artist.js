@@ -53,6 +53,13 @@ const artistSchema=new mongoose.Schema({
     appName:{
         type:String
     },
+    appVisits:{
+        type:Number,
+        default:0
+    },
+    accountHolderName:{
+        type:String
+    },
     accountNo:{
         type:String
     },

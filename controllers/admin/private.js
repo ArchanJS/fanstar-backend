@@ -295,3 +295,30 @@ exports.getTotalSubscribers=async(req,res)=>{
         res.status(500).json({error:"Something went wrong!"});
     }
 }
+
+//Get total app visits
+exports.getTotalAppVisits=async(req,res)=>{
+    try {
+        const artists=await Artist.find();
+        let totalAppVisits=0;
+        artists.forEach(a=>{
+            totalAppVisits+=a.appVisits;
+        })
+        res.status(200).send(totalAppVisits.toString());
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Something went wrong!"});
+    }
+}
+
+//Generate token of an artist
+exports.generateTokenOfAnArtist=async(req,res)=>{
+    try {
+        const artist=await Artist.findOne({_id:req.params.artistId});
+        const token=await artist.generateToken();
+        res.status(200).send(token);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Something went wrong!"});
+    }
+}
