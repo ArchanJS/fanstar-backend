@@ -322,3 +322,23 @@ exports.generateTokenOfAnArtist=async(req,res)=>{
         res.status(500).json({error:"Something went wrong!"});
     }
 }
+
+//Get list of employees
+exports.getListOfEmployees=async(req,res)=>{
+    try {
+        const employees=await Employee.find();
+        const artists=await Artist.find();
+        const retArr=[];
+        for(let i=0;i<employees.length;i++){
+            let arts=0;
+            for(let j=0;j<artists.length;j++){
+                if(employees[i]._id.toString().trim()==artists[j].assignedEmployee.toString().trim()) arts++;
+            }
+            retArr.push({employeeId:employees[i]._id,employeeName:employees[i].username,address:employees[i].address,startDate:employees[i].createdAt,totalArtists:arts});
+        }
+        res.status(200).send(retArr);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Something went wrong!"});
+    }
+}
