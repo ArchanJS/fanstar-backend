@@ -249,7 +249,8 @@ exports.getListOfArtist=async(req,res)=>{
                 startDate:artists[i].createdAt,
                 address:artists[i].address,
                 totalOrders,
-                pendingOrders
+                pendingOrders,
+                blocked:artists[i].blocked
             });
         }
         // artists.forEach(async e=>{
@@ -334,7 +335,7 @@ exports.getListOfEmployees=async(req,res)=>{
             for(let j=0;j<artists.length;j++){
                 if(employees[i]._id.toString().trim()==artists[j].assignedEmployee.toString().trim()) arts++;
             }
-            retArr.push({employeeId:employees[i]._id,employeeName:employees[i].username,address:employees[i].address,startDate:employees[i].createdAt,totalArtists:arts});
+            retArr.push({employeeId:employees[i]._id,employeeName:employees[i].username,address:employees[i].address,startDate:employees[i].createdAt,totalArtists:arts,blocked:employees[i].blocked});
         }
         res.status(200).send(retArr);
     } catch (error) {
