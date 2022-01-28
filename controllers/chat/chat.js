@@ -1,3 +1,5 @@
+const Chat=require('../../models/Chat');
+
 //create chat
 exports.createChat=async(req,res)=>{
     try {

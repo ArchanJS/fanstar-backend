@@ -77,3 +77,14 @@ exports.getOrdersofAnArtist=async(req,res)=>{
         res.status(500).json({error:"Something went wrong!"});
     }
 }
+
+//Get payments of an artist
+exports.getPaymentsOfAnArtist=async(req,res)=>{
+    try {
+        const payments=await Payment.find({artistId:req.params.artistId});
+        res.status(200).send(payments);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Something went wrong!"});
+    }
+}
