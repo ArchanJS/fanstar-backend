@@ -11,8 +11,6 @@ const http = require('http');
 const SocketModel=require('./models/Socket');
 const { Socket } = require('dgram');
 
-const io = socketio(server);
-
 require('./db/conn');
 
 app.use(bodyParser.json({limit:"50mb"}));
