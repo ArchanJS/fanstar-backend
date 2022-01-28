@@ -44,39 +44,43 @@ app.use('/api/employee/private',require('./routes/employee/private'));
 app.use('/api/admin/public',require('./routes/admin/public'));
 app.use('/api/admin/private',require('./routes/admin/private'));
 
+const { addMessage } = require('./utils/socketServer')
+
+const Messages=require("./models/Message");
+
 //Socket-io
-io.on('connection', (socket) => {
-	console.log("New websocket connected!", socket);
+// io.on('connection', (socket) => {
+// 	console.log("New websocket connected!", socket);
 
 
-	// whenever someone joins store or update their socketid in database
-	socket.on('updatesocketid', async (userid) => {
-		let isMatch = await SocketModel.findOne({ userid: mongoose.Types.ObjectId(userid) });
-		if (!isMatch) {
-			let socketdata = new SocketModel({
-				userid: mongoose.Types.ObjectId(userid),
-				socketid: socket.id
-			})
-			await socketdata.save();
-		} else {
-			let updates = {
-				socketid: socket.id
-			}
-			await SocketModel.findOneAndUpdate({ userid: mongoose.Types.ObjectId(userid) }, { $set: updates });
-		}
-		let messages = await getMessages(userid); //getting messages of the user who has joined .
-		socket.emit('messages', messages);
+// 	// whenever someone joins store or update their socketid in database
+// 	socket.on('updatesocketid', async (userid) => {
+// 		let isMatch = await SocketModel.findOne({ userid: mongoose.Types.ObjectId(userid) });
+// 		if (!isMatch) {
+// 			let socketdata = new SocketModel({
+// 				userid: mongoose.Types.ObjectId(userid),
+// 				socketid: socket.id
+// 			})
+// 			await socketdata.save();
+// 		} else {
+// 			let updates = {
+// 				socketid: socket.id
+// 			}
+// 			await SocketModel.findOneAndUpdate({ userid: mongoose.Types.ObjectId(userid) }, { $set: updates });
+// 		}
+// 		let messages = await getMessages(userid); //getting messages of the user who has joined .
+// 		socket.emit('messages', messages);
 
-	})
+// 	})
 
-	socket.on('privatemessage', async ({ user1, user2, message }) => {
-		console.log('inside', user1, user2, message);
-		await storeMessage(message, user1, user2);
-		let socketdata = await SocketModel.findOne({ userid: mongoose.Types.ObjectId(user2) });
-		if (socketdata) { // if only one is online then only send him the message otherwise just store his messages.
-			socket.to(socketdata.socketid).emit('privatemessage', message);
-		}
-	})
+// 	socket.on('privatemessage', async ({ user1, user2, message }) => {
+// 		console.log('inside', user1, user2, message);
+// 		await storeMessage(message, user1, user2);
+// 		let socketdata = await SocketModel.findOne({ userid: mongoose.Types.ObjectId(user2) });
+// 		if (socketdata) { // if only one is online then only send him the message otherwise just store his messages.
+// 			socket.to(socketdata.socketid).emit('privatemessage', message);
+// 		}
+// 	})
 
 
 	// adding a user into a room
@@ -100,12 +104,60 @@ io.on('connection', (socket) => {
 	// 	socket.broadcast.to(roomid).emit('message', message);
 	// })
 
-	socket.on('disconnect', async function () {
-		console.log('disconnected');
-	    // when user goes offline delete his socketid from db so that we can know which user is online or offline
-		await SocketModel.findOneAndDelete({socketid:socket.id});
+// 	socket.on('disconnect', async function () {
+// 		console.log('disconnected');
+// 	    // when user goes offline delete his socketid from db so that we can know which user is online or offline
+// 		await SocketModel.findOneAndDelete({socketid:socket.id});
+// 	});
+// })
+
+io.on('connection', (socket) => {
+	// When User Connect Current Socket of the user will Update
+	console.log("Socket Id ",socket.id)
+  
+	socket.on("JOIN_ROOM",async (room) => {
+	  console.log("Room connected ", room)
+	  socket.join(room);
+	  const messages=await Messages.find({conversation:room}) 
+	  socket.emit("ALL_MESSAGES",messages)
+	  socket.broadcast.to(room).emit('USER_ONLINE', 'ONLINE');
 	});
-})
+
+	socket.on("USER_ONLINE",(room)=>{
+	  socket.broadcast.to(room).emit('USER_ONLINE', 'ONLINE');
+	})
+	
+	socket.on(
+	  'NEW_MESSAGE',
+	  async ({ conversationId, sender, receiver, message }) => {
+		console.log(conversationId, sender[0], receiver, message)
+		const newMessage = await addMessage(sender[0], message, conversationId)
+		io.to(conversationId).emit("NEW_MESSAGE", newMessage);
+	  }
+	)
+
+	socket.on('createSocket', async (userId) => {
+	  console.log("Usser Id ",userId)
+	  const createConnection = await manageSocket(userId, socket.id)
+	  console.log('User Connected ', createConnection)
+	})
+	
+	// When Sender the message search receiver socket and message to receiver​
+	// socket.on(
+	//   'privatemessage',
+	//   async ({ conversationId, sender, receiver, message }) => {
+	//     const receiverSocket = await manageSocket(receiver)
+	//     const newMessage = await addMessage(sender, message, conversationId)
+	//     socket.to(receiverSocket.socketId).emit('privatemessage', newMessage)
+	//   }
+	// )
+	// When one user unmatched the other
+
+	socket.on('disconnect', async function (roomid) {
+	  console.log(' user unmatched ')
+	  socket.broadcast.to(roomid).emit('userunmatched')
+	})
+  })
 
 
 
