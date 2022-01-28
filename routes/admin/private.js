@@ -116,12 +116,12 @@ router.put('/updateanemployee/:employeeId',protectAdmin,updateAnEmployee);
 router.delete('/deleteanemployee/:employeeId',protectAdmin,deleteAnEmployee);
 
 //Get all payments
-//Route : '/api/admin/private/getallpayments/:field'
+//Route : '/api/admin/private/getallpayments'
 //Method : GET
 //Body : N/A
-//Params : {field}
+//Params : N/A
 //Token : Yes
-router.get('/getallpayments/:field',protectAdmin,getAllPayments);
+router.post('/getallpayments',protectAdmin,getAllPayments);
 
 //Get no. of total and pending orders of an artist
 //Route : '/api/admin/private/getordersofartist/:artistId'
@@ -140,12 +140,12 @@ router.get('/getordersofartist/:artistId',protectAdmin,getOrdersofAnArtist);
 router.get('/getpayments/:artistId',protectAdmin,getPaymentOfAnArtist);
 
 //Get list of artists
-//Route : '/api/admin/private/getlistofartists/:field'
+//Route : '/api/admin/private/getlistofartists'
 //Method : GET
 //Body : N/A
-//Params : {field}
+//Params : N/A
 //Token : Yes
-router.get('/getlistofartists/:field',protectAdmin,getListOfArtist);
+router.post('/getlistofartists',protectAdmin,getListOfArtist);
 
 //Get artists of an employee
 //Route : '/api/admin/private/getartistofanemployee/:employeeId'
@@ -180,11 +180,11 @@ router.get('/gettotalappvisits',protectAdmin,getTotalAppVisits);
 router.get('/generatetokenofanartist/:artistId',protectAdmin,generateTokenOfAnArtist);
 
 //Get list of employees
-//Route : '/api/admin/private/getlistofemployees/:field'
+//Route : '/api/admin/private/getlistofemployees'
 //Method : GET
 //Body : N/A
-//Params : {field}
+//Params : N/A
 //Token : Yes
-router.get('/getlistofemployees/:field',protectAdmin,getListOfEmployees);
+router.post('/getlistofemployees',protectAdmin,getListOfEmployees);
 
 module.exports=router;

@@ -221,15 +221,15 @@ exports.blockUnblockEmployee=async(req,res)=>{
 exports.getAllPayments=async(req,res)=>{
     try {
         let payments=[];
-        if(req.params.field&&req.params.field!=""){
-            if(req.params.field.trim().length==24){
+        if(req.body.field&&req.body.field!=""){
+            if(req.body.field.trim().length==24){
                 payments=await Payment.find({
-                    _id: req.params.field
+                    _id: req.body.field
                 }).populate("artistId");
             }
             if(payments.length==0){
                 const artists=await Artist.find({
-                    username: { $regex: req.params.field, $options: "i" }
+                    username: { $regex: req.body.field, $options: "i" }
                 })
                 // console.log(artists);
                 const allPayments=await Payment.find().populate("artistId");
@@ -260,9 +260,9 @@ exports.getListOfArtist=async(req,res)=>{
     try {
         const retArr=[];
         let artists;
-        if(req.params.field&&req.params.field!=""){
+        if(req.body.field&&req.body.field!=""){
             artists=await Artist.find({
-                username: { $regex: req.params.field, $options: "i" }
+                username: { $regex: req.body.field, $options: "i" }
             })
         }
         else artists=await Artist.find();
@@ -360,9 +360,9 @@ exports.generateTokenOfAnArtist=async(req,res)=>{
 exports.getListOfEmployees=async(req,res)=>{
     try {
         let employees;
-        if(req.params.field&&req.params.field!=""){
+        if(req.body.field&&req.body.field!=""){
             employees=await Employee.find({
-                username: { $regex: req.params.field, $options: "i" }
+                username: { $regex: req.body.field, $options: "i" }
             })
         }
        else employees=await Employee.find();
