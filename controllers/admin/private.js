@@ -91,7 +91,7 @@ exports.getAnArtist=async(req,res)=>{
     }
 }
 
-//Get no. of total and pedning orders of an artist
+//Get no. of total and pending orders of an artist
 exports.getOrdersofAnArtist=async(req,res)=>{
     try {
         const totalOrders=await Payment.find({artistId:req.params.artistId});
