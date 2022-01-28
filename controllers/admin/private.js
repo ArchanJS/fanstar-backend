@@ -220,7 +220,34 @@ exports.blockUnblockEmployee=async(req,res)=>{
 //Get payments
 exports.getAllPayments=async(req,res)=>{
     try {
-        const payments=await Payment.find().populate("artistId");
+        let payments=[];
+        if(req.body.field&&req.body.field!=""){
+            if(req.body.field.trim().length==24){
+                payments=await Payment.find({
+                    _id: req.body.field
+                }).populate("artistId");
+            }
+            if(payments.length==0){
+                const artists=await Artist.find({
+                    username: { $regex: req.body.field, $options: "i" }
+                })
+                // console.log(artists);
+                const allPayments=await Payment.find().populate("artistId");
+                payments=[];
+                for(let i=0;i<artists.length;i++){
+                    for(let j=0;j<allPayments.length;j++){
+                        // console.log(allPayments[j].artistId.toString().trim())
+                        if(artists[i]._id.toString().trim()==allPayments[j].artistId._id.toString().trim()) {
+                            // console.log(j);
+                            payments.push(allPayments[j]);
+                        }
+                    }
+                }
+            }
+        }
+        else {
+            payments=await Payment.find().populate("artistId");
+        }
         res.status(200).send(payments);
     } catch (error) {
         console.log(error);
@@ -232,7 +259,13 @@ exports.getAllPayments=async(req,res)=>{
 exports.getListOfArtist=async(req,res)=>{
     try {
         const retArr=[];
-        const artists=await Artist.find();
+        let artists;
+        if(req.body.field&&req.body.field!=""){
+            artists=await Artist.find({
+                username: { $regex: req.body.field, $options: "i" }
+            })
+        }
+        else artists=await Artist.find();
         const payments=await Payment.find();
         for(let i=0;i<artists.length;i++){
             let totalOrders=0;
@@ -267,7 +300,6 @@ exports.getListOfArtist=async(req,res)=>{
         //     console.log(artist);
         //     retArr.push(artist);
         // })
-        console.log(retArr);
         res.status(200).send(retArr);
     } catch (error) {
         console.log(error);
@@ -327,7 +359,13 @@ exports.generateTokenOfAnArtist=async(req,res)=>{
 //Get list of employees
 exports.getListOfEmployees=async(req,res)=>{
     try {
-        const employees=await Employee.find();
+        let employees;
+        if(req.body.field&&req.body.field!=""){
+            employees=await Employee.find({
+                username: { $regex: req.body.field, $options: "i" }
+            })
+        }
+       else employees=await Employee.find();
         const artists=await Artist.find();
         const retArr=[];
         for(let i=0;i<employees.length;i++){
