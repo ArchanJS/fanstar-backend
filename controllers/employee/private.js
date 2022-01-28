@@ -37,7 +37,7 @@ exports.getOwnArtists=async(req,res)=>{
             for(let j=0;j<orders.length;j++){
                 if(artists[i]._id.toString().trim()==orders[j].artistId.toString().trim()) pendingOrders++;
             }
-            retArr.push({artistId:artists[i]._id,artistName:artists[i].username,pendingOrders});
+            retArr.push({artistId:artists[i]._id,artistName:artists[i].username,profilePhoto:artists[i].profilePhoto,pendingOrders});
         }
         res.status(200).send(retArr);
     } catch (error) {
