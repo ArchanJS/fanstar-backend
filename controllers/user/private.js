@@ -148,7 +148,7 @@ exports.buyServices = async (req, res) => {
             balance: uBalance
           }
         })
-        const payment=new Payment({artistId:service.createdBy,userId:req.user,serviceId:service._id,status:"pending"});
+        const payment=new Payment({artistId:service.createdBy,userId:req.user,amount:service.amount,serviceId:service._id,status:"pending"});
         await payment.save();
         res.status(200).json({ message: "Service added!" });
       }

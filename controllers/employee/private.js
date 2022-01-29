@@ -1,6 +1,8 @@
 const Employee=require('../../models/Employee');
 const Payment=require('../../models/Payment');
 const Artist=require('../../models/Artist');
+const Album=require('../../models/Album');
+const Service=require('../../models/Service');
 
 //Get own profile
 exports.getOwnProfile=async(req,res)=>{
@@ -84,6 +86,20 @@ exports.getPaymentsOfAnArtist=async(req,res)=>{
         const payments=await Payment.find({artistId:req.params.artistId});
         res.status(200).send(payments);
     } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Something went wrong!"});
+    }
+}
+
+//Delete an artist
+exports.deleteAnArtist=async(req,res)=>{
+    try{
+        await Album.deleteMany({postedBy:req.params.artistId});
+        await Service.deleteMany({createdBy:req.params.artistId});
+        await Payment.deleteMany({artistId:req.params.artistId});
+        await Artist.deleteOne({_id:req.params.artistId});
+        res.status(200).json({message:"Artist deleted!"});
+    }catch(error){
         console.log(error);
         res.status(500).json({error:"Something went wrong!"});
     }
