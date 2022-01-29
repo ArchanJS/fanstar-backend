@@ -42,7 +42,7 @@ router.get('/getparticularartist/:artistId',protectEmployee,getAParticularArtist
 //Token : Yes
 router.get('/getpayments/:artistId',protectEmployee,getPaymentsOfAnArtist);
 
-//Delete an artists
+//Delete an artist
 //Route : '/api/employee/private/deleteartist/:artistId'
 //Method : DELETE
 //Body : N/A
