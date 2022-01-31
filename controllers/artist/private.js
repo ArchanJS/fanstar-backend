@@ -160,7 +160,7 @@ exports.addEvent = async (req, res) => {
         eventEndTime.setDate(eventEndTime.getDay() + 4)
         eventEndTime.setMinutes(eventEndTime.getMinutes() + 45)
 
-        const resp = await addEventToGoogleCalender(summary, eventStartTime, eventEndTime, location, description, colorId, attendees);
+        const resp = await addEventToGoogleCalender(summary, startTime, endTime, location, description, colorId, attendees);
         console.log(resp);
         res.status(201).json({ message: "Event created!" });
     } catch (error) {
