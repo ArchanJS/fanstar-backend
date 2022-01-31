@@ -1,6 +1,7 @@
 const Artist = require('../../models/Artist');
 const Service = require('../../models/Service');
 const Album=require('../../models/Album');
+const Payment=require('../../models/Payment');
 const fs = require('fs');
 const util = require('util');
 const unlinkFile = util.promisify(fs.unlink);
@@ -72,6 +73,27 @@ exports.updateService = async (req, res) => {
                 })
                 res.status(200).json({ message: "Service updated!" });
             }
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Something went wrong!" });
+    }
+}
+
+//Complete service
+exports.completePayment=async(req,res)=>{
+    try {
+        const payment=await Payment.findOne({$and:[{serviceId:req.body.serviceId},{artistId:req.artist._id},{userId:req.body.userId}]});
+        if(payment&&payment.artistId.toString().trim()==req.artist._id.toString().trim()){
+            await Payment.findOneAndUpdate({_id:payment._id},{
+                $set:{
+                    status:"completed"
+                }
+            })
+            res.status(200).json({message:"Status changed!"});
+        }
+        else{
+            res.status(400).send({error:"Can't change status!"});
         }
     } catch (error) {
         console.log(error);
