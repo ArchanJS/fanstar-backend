@@ -1,6 +1,6 @@
 const router=require('express').Router();
 const{protectAdmin}=require('../../middlewares/protect');
-const {getAllArtists,getAllUsers,getAllEmployees, createArtist, blockUnblockArtist, getAnArtist, updateAnArtist, deleteAnArtist, createAnEmployee, blockUnblockEmployee, getAnEmployee, updateAnEmployee, deleteAnEmployee,getAllPayments,getOrdersofAnArtist,getPaymentOfAnArtist, getListOfArtist, getArtistsOfAnEmployee,getTotalSubscribers,getTotalAppVisits,generateTokenOfAnArtist,getListOfEmployees}=require('../../controllers/admin/private');
+const {getAllArtists,getAllUsers,getAllEmployees, createArtist, blockUnblockArtist, getAnArtist, updateAnArtist, deleteAnArtist, createAnEmployee, blockUnblockEmployee, getAnEmployee, updateAnEmployee, deleteAnEmployee,getAllPayments,getOrdersofAnArtist,getPaymentOfAnArtist, getListOfArtist, getArtistsOfAnEmployee,getTotalSubscribers,getTotalAppVisits,generateTokenOfAnArtist,getListOfEmployees,getPaymentsOfArtistsOfAnEmployee}=require('../../controllers/admin/private');
 
 //Get all artists
 //Route : '/api/admin/private/getallartists'
@@ -181,10 +181,18 @@ router.get('/generatetokenofanartist/:artistId',protectAdmin,generateTokenOfAnAr
 
 //Get list of employees
 //Route : '/api/admin/private/getlistofemployees'
-//Method : GET
+//Method : POST
 //Body : N/A
 //Params : N/A
 //Token : Yes
 router.post('/getlistofemployees',protectAdmin,getListOfEmployees);
+
+//Get payments of artists of an employee
+//Route : '/api/admin/private/getpaymentsofartistsofemployee/:employeeId'
+//Method : GET
+//Body : N/A
+//Params : {employeeId}
+//Token : Yes
+router.get('/getpaymentsofartistsofemployee/:employeeId',protectAdmin,getPaymentsOfArtistsOfAnEmployee);
 
 module.exports=router;

@@ -381,3 +381,25 @@ exports.getListOfEmployees=async(req,res)=>{
         res.status(500).json({error:"Something went wrong!"});
     }
 }
+
+//Get all payments of artists of an employee
+exports.getPaymentsOfArtistsOfAnEmployee=async(req,res)=>{
+    try {
+        const artists=await Artist.find({assignedEmployee:req.params.employeeId});
+        const payments=await Payment.find();
+        const retArr=[];
+        for(let i=0;i<artists.length;i++){
+            let paymentsOfArtist=[];
+            for(let j=0;j<payments.length;j++){
+                if(artists[i]._id.toString().trim()==payments[j].artistId.toString().trim()){
+                    paymentsOfArtist.push(payments[j]);
+                }
+            }
+            retArr.push({artist:artists[i],paymentsOfArtist});
+        }
+        res.status(200).send(retArr);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Something went wrong!"});
+    }
+}
