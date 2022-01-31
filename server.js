@@ -10,6 +10,7 @@ const mongoose = require('mongoose');
 const http = require('http');
 const SocketModel=require('./models/Socket');
 const { Socket } = require('dgram');
+const moment=require('moment');
 
 require('./db/conn');
 
@@ -59,7 +60,7 @@ io.on("connection",(socket)=>{
     socket.on("sendmessage",async({userId,roomId,message})=>{
         const chat=await Chat.findOneAndUpdate({_id:roomId},{
             $push:{
-                allMessages:{senderId:userId,message}
+                allMessages:{senderId:userId,message,time:moment().format()}
             }
         },{new:true})
         console.log(userId);

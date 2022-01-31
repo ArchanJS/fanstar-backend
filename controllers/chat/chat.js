@@ -1,4 +1,5 @@
 const Chat=require('../../models/Chat');
+const User = require('../../models/User');
 
 //Create chat
 exports.createChat=async(req,res)=>{
@@ -32,8 +33,20 @@ exports.getAChat=async(req,res)=>{
 exports.fetchAllChatsOfAnArtist=async(req,res)=>{
     try {
         const {artistId}=req.params;
-        let chats=await Chat.find({userIds:{$in:[artistId]}});
-        res.status(200).send(chats);
+        const chats=await Chat.find({userIds:{$in:[artistId]}});
+        const users=await User.find();
+        let messArr=[];
+        for(let i=0;i<chats.length;i++){
+            for(let j=0;j<users.length;j++){
+                if(chats[i].userIds[0].toString().trim()==users[j]._id.toString().trim()){
+                    messArr.push({userPhone:users[j].phone,lastMessage:chats[i].allMessages&&chats[i].allMessages.length>0?chats[i].allMessages[chats[i].allMessages.length-1]:[]});
+                }
+                else if(chats[i].userIds[1].toString().trim()==users[j]._id.toString().trim()){
+                    messArr.push({userPhone:users[j].phone,lastMessage:chats[i].allMessages&&chats[i].allMessages.length>0?chats[i].allMessages[chats[i].allMessages.length-1]:[]});
+                }
+            }
+        }
+        res.status(200).send(messArr);
     } catch (error) {
         console.log(error);
         res.status(500).json({error:"Something went wrong!"});
