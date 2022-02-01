@@ -150,6 +150,9 @@ exports.buyServices = async (req, res) => {
         })
         const payment=new Payment({artistId:service.createdBy,userId:req.user,amount:service.amount,serviceId:service._id,status:"pending"});
         await payment.save();
+        await User.findOneAndUpdate({phone:req.user.phone},{
+          $set:{username,email,insta}
+        })
         res.status(200).json({ message: "Service added!" });
       }
       else res.status(400).json({ error: "User doesn't have enough balance!" });

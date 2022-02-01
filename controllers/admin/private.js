@@ -255,6 +255,44 @@ exports.getAllPayments=async(req,res)=>{
     }
 }
 
+//Get all payments of users
+exports.getAllPaymentsOfUsers=async(req,res)=>{
+    try {
+        let payments=[];
+        if(req.body.field&&req.body.field!=""){
+            if(req.body.field.trim().length==24){
+                payments=await Payment.find({
+                    _id: req.body.field
+                }).populate("userId");
+            }
+            if(payments.length==0){
+                const users=await User.find({
+                    username: { $regex: req.body.field, $options: "i" }
+                })
+                // console.log(artists);
+                const allPayments=await Payment.find().populate("userId");
+                payments=[];
+                for(let i=0;i<users.length;i++){
+                    for(let j=0;j<allPayments.length;j++){
+                        // console.log(allPayments[j].artistId.toString().trim())
+                        if(users[i]._id.toString().trim()==allPayments[j].userId._id.toString().trim()) {
+                            // console.log(j);
+                            payments.push(allPayments[j]);
+                        }
+                    }
+                }
+            }
+        }
+        else {
+            payments=await Payment.find().populate("userId");
+        }
+        res.status(200).send(payments);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Something went wrong!"});
+    }
+}
+
 //Get list of artists
 exports.getListOfArtist=async(req,res)=>{
     try {

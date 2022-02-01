@@ -13,6 +13,15 @@ const userSchema=new mongoose.Schema({
     balance:{
         type:String,
         default:"0.00"
+    },
+    username:{
+        type:String
+    },
+    email:{
+        type:String
+    },
+    insta:{
+        type:String
     }
 },{timestamps:true})
 
