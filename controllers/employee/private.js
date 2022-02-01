@@ -104,3 +104,28 @@ exports.deleteAnArtist=async(req,res)=>{
         res.status(500).json({error:"Something went wrong!"});
     }
 }
+
+
+//Get all payments of own artists
+exports.getPaymentsOfOwnArtists=async(req,res)=>{
+    try {
+        const artists=await Artist.find({assignedEmployee:req.employee._id});
+        const payments=await Payment.find();
+        const retArr=[];
+        const paymentArr=[];
+        for(let i=0;i<artists.length;i++){
+            let paymentsOfArtist=[];
+            for(let j=0;j<payments.length;j++){
+                if(artists[i]._id.toString().trim()==payments[j].artistId.toString().trim()){
+                    paymentsOfArtist.push(payments[j]);
+                    paymentArr.push(payments[j]);
+                }
+            }
+            retArr.push({artist:artists[i],paymentsOfArtist});
+        }
+        res.status(200).send(paymentArr);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Something went wrong!"});
+    }
+}

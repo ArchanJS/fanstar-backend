@@ -1,6 +1,6 @@
 const router=require('express').Router();
 const {protectEmployee}=require('../../middlewares/protect');
-const {getOwnProfile,updateProfile,getOrdersofAnArtist, getOwnArtists,getAParticularArtist,getPaymentsOfAnArtist,deleteAnArtist}=require('../../controllers/employee/private');
+const {getOwnProfile,updateProfile,getOrdersofAnArtist, getOwnArtists,getAParticularArtist,getPaymentsOfAnArtist,deleteAnArtist,getPaymentsOfOwnArtists}=require('../../controllers/employee/private');
 
 //Get a own profile
 //Route : '/api/employee/private/getownprofile'
@@ -57,6 +57,14 @@ router.delete('/deleteartist/:artistId',protectEmployee,deleteAnArtist);
 //Params : {artistId}
 //Token : Yes
 router.get('/getordersofartist/:artistId',protectEmployee,getOrdersofAnArtist);
+
+//Get payments of own artists
+//Route : '/api/employee/private/getpaymentsofownartists'
+//Method : GET
+//Body : N/A
+//Params : N/A
+//Token : Yes
+router.get('/getpaymentsofownartists',protectEmployee,getPaymentsOfOwnArtists);
 
 
 module.exports=router;
