@@ -2,7 +2,7 @@ const router=require('express').Router();
 const multer=require('multer');
 const upload=multer({dest:'uploads/'});
 const {protectArtist}=require('../../middlewares/protect');
-const {getOwnProfile,createService,updateService,completePayment,getOwnServices,uploadFile,deleteFile,readFile,addEvent,deleteEvent,updateProfile,getService,getAllOwnFiles}=require('../../controllers/artist/private');
+const {getOwnProfile,createService,updateService,completePayment,getOwnServices,uploadFile,deleteFile,readFile,addEvent,deleteEvent,updateProfile,getService,getAllOwnFiles,getOwnPayments}=require('../../controllers/artist/private');
 
 //Get a own profile
 //Route : '/api/artist/private/getownprofile'
@@ -11,6 +11,14 @@ const {getOwnProfile,createService,updateService,completePayment,getOwnServices,
 //Params : N/A
 //Token : Yes
 router.get('/getownprofile',protectArtist,getOwnProfile);
+
+//Get own payments
+//Route : '/api/artist/private/getownpayments'
+//Method : GET
+//Body : N/A
+//Params : N/A
+//Token : Yes
+router.get('/getownpayments',protectArtist,getOwnPayments);
 
 //Update profile
 //Route : '/api/artist/private/updateprofile'

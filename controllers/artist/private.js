@@ -18,6 +18,17 @@ exports.getOwnProfile=async(req,res)=>{
     }
 }
 
+//Get own payments
+exports.getOwnPayments=async(req,res)=>{
+    try {
+        const payments=await Payment.find({artistId:req.artist._id});
+        res.status(200).send(payments);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Something went wrong!"});
+    }
+}
+
 //Update profile
 exports.updateProfile=async(req,res)=>{
     try {
