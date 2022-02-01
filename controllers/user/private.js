@@ -348,3 +348,15 @@ exports.giveFeedback=async(req,res)=>{
     res.status(500).json({error:"Something went wrong!"});
   }
 }
+
+//Get particular service with name of an artist
+exports.getServiceWithName=async(req,res)=>{
+  try {
+    const service= await Service.findOne({$and:[{createdBy:req.params.artistId},{serviceName:{ $regex: req.params.serviceName, $options: "i" }}]});
+    if(service) res.status(200).send(service);
+    else res.status(400).json({error:"service not found!"});
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({error:"Something went wrong!"});
+  }
+}
