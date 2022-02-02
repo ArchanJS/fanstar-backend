@@ -5,9 +5,9 @@ const chatSchema=new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:'user'
     }],
-    serviceId:{
+    paymentId:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'service'
+        ref:'payment'
     },
     allMessages:[{
         senderId:{

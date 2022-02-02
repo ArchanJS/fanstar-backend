@@ -23,6 +23,14 @@ const paymentSchema=new mongoose.Schema({
         type:Boolean,
         default:false
     },
+    doneForArtist:{
+        type:Boolean,
+        default:false
+    },
+    doneForUser:{
+        type:Boolean,
+        default:false
+    },
     status:{
         type:String,
         requierd:true

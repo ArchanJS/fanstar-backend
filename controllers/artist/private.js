@@ -94,14 +94,22 @@ exports.updateService = async (req, res) => {
 //Complete service
 exports.completePayment=async(req,res)=>{
     try {
-        const payment=await Payment.findOne({$and:[{serviceId:req.body.serviceId},{artistId:req.artist._id},{userId:req.body.userId}]});
+        //$and:[{serviceId:req.body.serviceId},{artistId:req.artist._id},{userId:req.body.userId}]
+        let payment=await Payment.findOne({_id:req.body.paymentId});
         if(payment&&payment.artistId.toString().trim()==req.artist._id.toString().trim()){
-            await Payment.findOneAndUpdate({_id:payment._id},{
+            payment=await Payment.findOneAndUpdate({_id:payment._id},{
                 $set:{
-                    status:"completed"
+                    doneForArtist:true
                 }
-            })
-            res.status(200).json({message:"Status changed!"});
+            },{new:true})
+            if(payment.doneForUser==true){
+                await Payment.findOneAndUpdate({_id:payment._id},{
+                    $set:{
+                        status:"completed"
+                    }
+                })
+            }
+            res.status(200).json({message:"Marked as done!"});
         }
         else{
             res.status(400).send({error:"Can't change status!"});

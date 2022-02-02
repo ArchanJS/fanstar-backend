@@ -1,5 +1,5 @@
 const router=require('express').Router();
-const {buyServices,order,capture,buyAlbum,getArtist,getAService,readFile,getOwnDetails,getAlbum,giveFeedback,removeAlbumAccess,getAlbumTimestamp,subscribe, unsubscribe,getServiceWithName}=require('../../controllers/user/private');
+const {buyServices,order,capture,buyAlbum,getArtist,getAService,readFile,getOwnDetails,getAlbum,giveFeedback,removeAlbumAccess,getAlbumTimestamp,subscribe, unsubscribe,getServiceWithName,completePayment}=require('../../controllers/user/private');
 const {protectUser}=require('../../middlewares/protect');
 
 //Get own details
@@ -121,5 +121,13 @@ router.put('/unsubscribe',protectUser,unsubscribe);
 //Params : {artistId,serviceName}
 //Token : Yes
 router.get('/getservicewithname/:artistId/:serviceName',protectUser,getServiceWithName);
+
+//Complete a payment
+//Route : '/api/user/private/completepayment'
+//Method : PUT
+//Body : {paymentId}
+//Params : N/A
+//Token : Yes
+router.put('/completepayment',protectUser,completePayment);
 
 module.exports=router;

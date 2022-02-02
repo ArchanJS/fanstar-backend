@@ -363,3 +363,32 @@ exports.getServiceWithName=async(req,res)=>{
     res.status(500).json({error:"Something went wrong!"});
   }
 }
+
+//Complete service
+exports.completePayment=async(req,res)=>{
+  try {
+      //$and:[{serviceId:req.body.serviceId},{artistId:req.artist._id},{userId:req.body.userId}]
+      let payment=await Payment.findOne({_id:req.body.paymentId});
+      if(payment&&payment.userId.toString().trim()==req.user._id.toString().trim()){
+          payment=await Payment.findOneAndUpdate({_id:payment._id},{
+              $set:{
+                  doneForUser:true
+              }
+          },{new:true})
+          if(payment.doneForArtist==true){
+              await Payment.findOneAndUpdate({_id:payment._id},{
+                  $set:{
+                      status:"completed"
+                  }
+              })
+          }
+          res.status(200).json({message:"Marked as done!"});
+      }
+      else{
+          res.status(400).send({error:"Can't change status!"});
+      }
+  } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: "Something went wrong!" });
+  }
+}

@@ -4,10 +4,10 @@ const User = require('../../models/User');
 //Create chat
 exports.createChat=async(req,res)=>{
     try {
-        const {user1,user2,serviceId}=req.body;
+        const {user1,user2,paymentId}=req.body;
         let chat=await Chat.findOne({userIds:{$all:[user1,user2]}});
         if(!chat) {
-            chat=new Chat({userIds:[user1,user2],serviceId});
+            chat=new Chat({userIds:[user1,user2],paymentId});
             await chat.save();
         }
         if(chat) res.status(201).send(chat._id);

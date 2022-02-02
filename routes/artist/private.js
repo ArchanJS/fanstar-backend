@@ -55,7 +55,7 @@ router.put('/updateservice/:serviceId',protectArtist,updateService);
 //Complete a payment
 //Route : '/api/artist/private/completepayment'
 //Method : PUT
-//Body : {serviceId,userId}
+//Body : {paymentId}
 //Params : N/A
 //Token : Yes
 router.put('/completepayment',protectArtist,completePayment);
