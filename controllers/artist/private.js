@@ -213,3 +213,18 @@ exports.deleteEvent = async (req, res) => {
         res.status(500).json({ error: "Someting went wrong!" });
     }
 }
+
+//Change theme
+exports.changeTheme=async(req,res)=>{
+    try{
+        const artist=await Artist.findOneAndUpdate({_id:req.artist._id},{
+            $set:{
+                theme:req.body.theme
+            }
+        },{new:true})
+        res.status(200).send(artist);
+    }catch(error){
+        console.log(error);
+        res.status(500).json({ error: "Someting went wrong!" });
+    }
+}

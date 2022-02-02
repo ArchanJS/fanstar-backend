@@ -2,7 +2,7 @@ const router=require('express').Router();
 const multer=require('multer');
 const upload=multer({dest:'uploads/'});
 const {protectArtist}=require('../../middlewares/protect');
-const {getOwnProfile,createService,updateService,completePayment,getOwnServices,uploadFile,deleteFile,readFile,addEvent,deleteEvent,updateProfile,getService,getAllOwnFiles,getOwnPayments}=require('../../controllers/artist/private');
+const {getOwnProfile,createService,updateService,completePayment,getOwnServices,uploadFile,deleteFile,readFile,addEvent,deleteEvent,updateProfile,getService,getAllOwnFiles,getOwnPayments,changeTheme}=require('../../controllers/artist/private');
 
 //Get a own profile
 //Route : '/api/artist/private/getownprofile'
@@ -115,5 +115,13 @@ router.post('/addevent',protectArtist,addEvent);
 //Params : eventId
 //Token : Yes
 router.delete('/deleteevent/:eventId',protectArtist,deleteEvent);
+
+//Change theme
+//Route : '/api/artist/private/changetheme'
+//Method : PUT
+//Body : {theme}
+//Params : N/A
+//Token : Yes
+router.put('/changetheme',protectArtist,changeTheme);
 
 module.exports=router;

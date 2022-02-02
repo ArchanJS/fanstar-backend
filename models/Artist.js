@@ -31,6 +31,10 @@ const artistSchema=new mongoose.Schema({
         type:String,
         default:"0.00"
     },
+    theme:{
+        type:String,
+        default:"black"
+    },
     feedbacks:[{
         userId:{
             type:mongoose.Schema.Types.ObjectId,
