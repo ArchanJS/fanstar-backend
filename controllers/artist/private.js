@@ -2,6 +2,7 @@ const Artist = require('../../models/Artist');
 const Service = require('../../models/Service');
 const Album=require('../../models/Album');
 const Payment=require('../../models/Payment');
+const Chat=require('../../models/Chat');
 const fs = require('fs');
 const util = require('util');
 const unlinkFile = util.promisify(fs.unlink);
@@ -108,6 +109,7 @@ exports.completePayment=async(req,res)=>{
                         status:"completed"
                     }
                 })
+                await Chat.deleteOne({_id:req.body.roomId});
             }
             res.status(200).json({message:"Marked as done!"});
         }
@@ -174,6 +176,7 @@ exports.getAllOwnFiles=async(req,res)=>{
         res.status(500).json({error:"Something went wrong!"});
     }
 }
+
 
 //Delete image
 exports.deleteFile = async (req, res) => {

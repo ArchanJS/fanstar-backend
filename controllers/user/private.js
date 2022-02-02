@@ -3,6 +3,7 @@ const Artist = require('../../models/Artist');
 const Service = require('../../models/Service');
 const Album=require('../../models/Album');
 const Payment=require('../../models/Payment');
+const Chat=require('../../models/Chat');
 const {readImage}=require('../../controllers/artist/aws');
 const Razorpay = require('razorpay');
 const request = require('request');
@@ -382,6 +383,7 @@ exports.completePayment=async(req,res)=>{
                   }
               })
           }
+          await Chat.deleteOne({_id:req.body.roomId});
           res.status(200).json({message:"Marked as done!"});
       }
       else{

@@ -125,7 +125,7 @@ router.get('/getservicewithname/:artistId/:serviceName',protectUser,getServiceWi
 //Complete a payment
 //Route : '/api/user/private/completepayment'
 //Method : PUT
-//Body : {paymentId}
+//Body : {paymentId,roomId}
 //Params : N/A
 //Token : Yes
 router.put('/completepayment',protectUser,completePayment);
