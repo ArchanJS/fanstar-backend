@@ -5,6 +5,10 @@ const chatSchema=new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:'user'
     }],
+    serviceId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'service'
+    },
     allMessages:[{
         senderId:{
             type:mongoose.Schema.Types.ObjectId,
