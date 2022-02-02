@@ -177,7 +177,6 @@ exports.getAllOwnFiles=async(req,res)=>{
     }
 }
 
-
 //Delete image
 exports.deleteFile = async (req, res) => {
     try {
