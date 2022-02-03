@@ -394,3 +394,14 @@ exports.completePayment=async(req,res)=>{
       res.status(500).json({ error: "Something went wrong!" });
   }
 }
+
+//Get payments of user
+exports.getPaymentsOfAUser=async(req,res)=>{
+  try {
+    const payments=await Payment.find({userId:req.user._id,isAlbum:false}).populate("serviceId");
+    res.status(200).send(payments);
+  } catch (error) {
+    console.log(error);
+      res.status(500).json({ error: "Something went wrong!" });
+  }
+}
