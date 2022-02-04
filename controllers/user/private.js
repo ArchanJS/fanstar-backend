@@ -398,7 +398,7 @@ exports.completePayment=async(req,res)=>{
 //Get payments of user
 exports.getPaymentsOfAUser=async(req,res)=>{
   try {
-    const payments=await Payment.find({userId:req.user._id,isAlbum:false}).populate("serviceId");
+    const payments=await Payment.find({userId:req.user._id,isAlbum:false}).populate("serviceId").populate("userId");
     res.status(200).send(payments);
   } catch (error) {
     console.log(error);
