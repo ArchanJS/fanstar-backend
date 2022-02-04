@@ -30,6 +30,17 @@ exports.getOwnPayments=async(req,res)=>{
     }
 }
 
+//Get own pending orders
+exports.getOwnPendingOrders=async(req,res)=>{
+    try {
+        const payments=await Payment.find({artistId:req.artist._id,status:"pending"}).populate("userId").populate("serviceId");
+        res.status(200).send(payments);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Something went wrong!"});
+    }
+}
+
 //Update profile
 exports.updateProfile=async(req,res)=>{
     try {
