@@ -441,3 +441,23 @@ exports.getPaymentsOfArtistsOfAnEmployee=async(req,res)=>{
         res.status(500).json({error:"Something went wrong!"});
     }
 }
+
+//Update an artist's balance
+exports.updateArtistBalance=async(req,res)=>{
+    try {
+        const artist=await Artist.findOne({_id:req.body.artistId});
+        const artistBalance=parseInt(artist.balance);
+        let balance=(artistBalance-parseInt(req.body.amount))>0?artistBalance-parseInt(req.body.amount):0;
+        const artistPaid=parseInt(artist.paid);
+        let paid=artistPaid+parseInt(req.body.amount);
+        paid.toString();
+        balance=balance.toString();
+        await Artist.findOneAndUpdate({_id:req.body.artistId},{
+            $set:{balance,paid}
+        });
+        res.status(200).json({message:"Artists balance updated!"})
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Something went wrong!"});
+    }
+}

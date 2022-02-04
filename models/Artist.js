@@ -31,6 +31,10 @@ const artistSchema=new mongoose.Schema({
         type:String,
         default:"0.00"
     },
+    paid:{
+        type:String,
+        default:"0.00"
+    },
     theme:{
         type:String,
         default:"black"
