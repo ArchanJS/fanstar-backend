@@ -54,7 +54,7 @@ exports.addEventToGoogleCalender = async (
       calendarId: 'primary',
       resource: event,
     })
-    console.log('DATA', eventData)
+    // console.log('DATA', eventData)
     if (!eventData) return null
     const eventPatch = {
       conferenceData: {

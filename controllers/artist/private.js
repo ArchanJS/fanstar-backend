@@ -215,8 +215,9 @@ exports.addEvent = async (req, res) => {
         eventEndTime.setMinutes(eventEndTime.getMinutes() + 45)
 
         const resp = await addEventToGoogleCalender(summary, startTime, endTime, location, description, colorId, attendees);
-        console.log(resp);
-        res.status(201).json({ message: "Event created!" });
+        const {data}=resp;
+        console.log(data.hangoutLink);
+        res.status(201).send(data.hangoutLink);
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: "Someting went wrong!" });
