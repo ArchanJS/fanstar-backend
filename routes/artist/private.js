@@ -2,7 +2,7 @@ const router=require('express').Router();
 const multer=require('multer');
 const upload=multer({dest:'uploads/'});
 const {protectArtist}=require('../../middlewares/protect');
-const {getOwnProfile,createService,updateService,completePayment,getOwnServices,uploadFile,deleteFile,readFile,addEvent,deleteEvent,updateProfile,getService,getAllOwnFiles,getOwnPayments,changeTheme,getOwnPendingOrders}=require('../../controllers/artist/private');
+const {getOwnProfile,createService,updateService,completePayment,getOwnServices,uploadFile,deleteFile,readFile,addEvent,deleteEvent,updateProfile,getService,getAllOwnFiles,getOwnPayments,changeTheme,getOwnPendingOrders,createWithdrawReq,getOwnWithdrawals}=require('../../controllers/artist/private');
 
 //Get a own profile
 //Route : '/api/artist/private/getownprofile'
@@ -92,7 +92,7 @@ router.post('/uploadfile',protectArtist,upload.single('artistFile'),uploadFile);
 //Token : Yes
 router.get('/readfile/:fileKey',protectArtist,readFile);
 
-//Read a get
+//Read a file
 //Route : '/api/artist/private/getownfiles'
 //Method : GET
 //Body : N/A
@@ -131,5 +131,21 @@ router.delete('/deleteevent/:eventId',protectArtist,deleteEvent);
 //Params : N/A
 //Token : Yes
 router.put('/changetheme',protectArtist,changeTheme);
+
+//Add event
+//Route : '/api/artist/private/withdraw'
+//Method : POST
+//Body : {amount}
+//Params : N/A
+//Token : Yes
+router.post('/withdraw',protectArtist,createWithdrawReq);
+
+//Read a get
+//Route : '/api/artist/private/getownwithdrawals'
+//Method : GET
+//Body : N/A
+//Params : N/A
+//Token : Yes
+router.get('/getownwithdrawals',protectArtist,getOwnWithdrawals);
 
 module.exports=router;

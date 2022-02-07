@@ -4,6 +4,7 @@ const Employee=require('../../models/Employee');
 const Service=require('../../models/Service');
 const Album=require('../../models/Album');
 const Payment=require('../../models/Payment');
+const Withdraw=require('../../models/Withdraw');
 
 //Get artists
 exports.getAllArtists=async(req,res)=>{
@@ -445,17 +446,32 @@ exports.getPaymentsOfArtistsOfAnEmployee=async(req,res)=>{
 //Update an artist's balance
 exports.updateArtistBalance=async(req,res)=>{
     try {
-        const artist=await Artist.findOne({_id:req.body.artistId});
+        const withdraw=await Withdraw.findOne({_id:req.body.withdrawId})
+        const artist=await Artist.findOne({_id:withdraw.artistId});
         const artistBalance=parseInt(artist.balance);
-        let balance=(artistBalance-parseInt(req.body.amount))>0?artistBalance-parseInt(req.body.amount):0;
+        let balance=(artistBalance-parseInt(withdraw.amount))>0?artistBalance-parseInt(withdraw.amount):0;
         const artistPaid=parseInt(artist.paid);
-        let paid=artistPaid+parseInt(req.body.amount);
+        let paid=artistPaid+parseInt(withdraw.amount);
         paid.toString();
         balance=balance.toString();
-        await Artist.findOneAndUpdate({_id:req.body.artistId},{
+        await Artist.findOneAndUpdate({_id:withdraw.artistId},{
             $set:{balance,paid}
         });
+        await Withdraw.findOneAndUpdate({_id:req.body.withdrawId},{
+            $set:{status:"completed"}
+        });
         res.status(200).json({message:"Artists balance updated!"})
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Something went wrong!"});
+    }
+}
+
+//Get withdrawals of an artists
+exports.getWithdrawalsOfAnArtist=async(req,res)=>{
+    try {
+        const withdrawals=await Withdraw.find({artistId:req.params.artistId});
+        res.status(200).send(withdrawals);
     } catch (error) {
         console.log(error);
         res.status(500).json({error:"Something went wrong!"});

@@ -3,6 +3,7 @@ const Service = require('../../models/Service');
 const Album=require('../../models/Album');
 const Payment=require('../../models/Payment');
 const Chat=require('../../models/Chat');
+const Withdraw=require('../../models/Withdraw');
 const fs = require('fs');
 const util = require('util');
 const unlinkFile = util.promisify(fs.unlink);
@@ -246,6 +247,33 @@ exports.changeTheme=async(req,res)=>{
         },{new:true})
         res.status(200).send(artist);
     }catch(error){
+        console.log(error);
+        res.status(500).json({ error: "Someting went wrong!" });
+    }
+}
+
+//Create withdraw request
+exports.createWithdrawReq=async(req,res)=>{
+    try {
+        const artist=await Artist.findOne({_id:req.artist._id});
+        if(parseInt(artist.balance)<parseInt(req.body.amount)) res.status(400).json({error:"Artist doesn't have enough balance!"});
+        else{
+            const withdraw=new Withdraw({artistId:req.artist._id,amount:req.body.amount});
+            await withdraw.save();
+            res.status(201).json({message:"Withdrawal request created!"});
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Someting went wrong!" });
+    }
+}
+
+//Get own withdrawal requests
+exports.getOwnWithdrawals=async(req,res)=>{
+    try {
+        const withdrawals=await Withdraw.find({artistId:req.artist._id});
+        res.status(200).send(withdrawals);
+    } catch (error) {
         console.log(error);
         res.status(500).json({ error: "Someting went wrong!" });
     }

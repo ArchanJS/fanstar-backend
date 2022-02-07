@@ -1,6 +1,6 @@
 const router=require('express').Router();
 const{protectAdmin}=require('../../middlewares/protect');
-const {getAllArtists,getAllUsers,getAllEmployees, createArtist, blockUnblockArtist, getAnArtist, updateAnArtist, deleteAnArtist, createAnEmployee, blockUnblockEmployee, getAnEmployee, updateAnEmployee, deleteAnEmployee,getAllPayments,getOrdersofAnArtist,getPaymentOfAnArtist, getListOfArtist, getArtistsOfAnEmployee,getTotalSubscribers,getTotalAppVisits,generateTokenOfAnArtist,getListOfEmployees,getPaymentsOfArtistsOfAnEmployee,getAllPaymentsOfUsers,updateArtistBalance}=require('../../controllers/admin/private');
+const {getAllArtists,getAllUsers,getAllEmployees, createArtist, blockUnblockArtist, getAnArtist, updateAnArtist, deleteAnArtist, createAnEmployee, blockUnblockEmployee, getAnEmployee, updateAnEmployee, deleteAnEmployee,getAllPayments,getOrdersofAnArtist,getPaymentOfAnArtist, getListOfArtist, getArtistsOfAnEmployee,getTotalSubscribers,getTotalAppVisits,generateTokenOfAnArtist,getListOfEmployees,getPaymentsOfArtistsOfAnEmployee,getAllPaymentsOfUsers,updateArtistBalance,getWithdrawalsOfAnArtist}=require('../../controllers/admin/private');
 
 //Get all artists
 //Route : '/api/admin/private/getallartists'
@@ -206,11 +206,17 @@ router.post('/getallpaymentsofusers',protectAdmin,getAllPaymentsOfUsers);
 //Update an artist's balance
 //Route : '/api/admin/private/updateanartistbalance'
 //Method : PUT
-//Body : {artistId,amount}
+//Body : {withdrawId}
 //Params : N/A
 //Token : Yes
 router.put('/updateanartistbalance',protectAdmin,updateArtistBalance);
 
-
+//Get withdrawals of an artist
+//Route : '/api/admin/private/getwithdrawals/:artistId'
+//Method : GET
+//Body : N/A
+//Params : {artistId}
+//Token : Yes
+router.get('/getwithdrawals/:artistId',protectAdmin,getWithdrawalsOfAnArtist);
 
 module.exports=router;
