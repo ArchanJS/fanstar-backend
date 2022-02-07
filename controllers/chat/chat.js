@@ -39,10 +39,10 @@ exports.fetchAllChatsOfAnArtist=async(req,res)=>{
         for(let i=0;i<chats.length;i++){
             for(let j=0;j<users.length;j++){
                 if(chats[i].userIds[0].toString().trim()==users[j]._id.toString().trim()){
-                    messArr.push({roomId:chats[i]._id,userPhone:users[j].phone,paymentId:chats[i].paymentId,lastMessage:chats[i].allMessages&&chats[i].allMessages.length>0?chats[i].allMessages[chats[i].allMessages.length-1]:[]});
+                    messArr.push({roomId:chats[i]._id,userPhone:users[j].phone,username:users[j].username,email:users[j].email,paymentId:chats[i].paymentId,lastMessage:chats[i].allMessages&&chats[i].allMessages.length>0?chats[i].allMessages[chats[i].allMessages.length-1]:[]});
                 }
                 else if(chats[i].userIds[1].toString().trim()==users[j]._id.toString().trim()){
-                    messArr.push({userPhone:users[j].phone,paymentId:chats[i].paymentId,lastMessage:chats[i].allMessages&&chats[i].allMessages.length>0?chats[i].allMessages[chats[i].allMessages.length-1]:[]});
+                    messArr.push({userPhone:users[j].phone,username:users[j].username,email:users[j].email,paymentId:chats[i].paymentId,lastMessage:chats[i].allMessages&&chats[i].allMessages.length>0?chats[i].allMessages[chats[i].allMessages.length-1]:[]});
                 }
             }
         }
