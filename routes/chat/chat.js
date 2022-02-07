@@ -28,4 +28,5 @@ router.get('/getachat/:roomId',getAChat);
 
 router.get('/getallchats/:artistId',fetchAllChatsOfAnArtist);
 
+
 module.exports=router;
