@@ -206,7 +206,7 @@ router.post('/getallpaymentsofusers',protectAdmin,getAllPaymentsOfUsers);
 //Update an artist's balance
 //Route : '/api/admin/private/updateanartistbalance'
 //Method : PUT
-//Body : {withdrawId}
+//Body : {withdrawId,amount}
 //Params : N/A
 //Token : Yes
 router.put('/updateanartistbalance',protectAdmin,updateArtistBalance);

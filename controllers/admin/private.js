@@ -449,9 +449,9 @@ exports.updateArtistBalance=async(req,res)=>{
         const withdraw=await Withdraw.findOne({_id:req.body.withdrawId})
         const artist=await Artist.findOne({_id:withdraw.artistId});
         const artistBalance=parseInt(artist.balance);
-        let balance=(artistBalance-parseInt(withdraw.amount))>0?artistBalance-parseInt(withdraw.amount):0;
+        let balance=(artistBalance-parseInt(req.body.amount))>0?artistBalance-parseInt(req.body.amount):0;
         const artistPaid=parseInt(artist.paid);
-        let paid=artistPaid+parseInt(withdraw.amount);
+        let paid=artistPaid+parseInt(req.body.amount);
         paid.toString();
         balance=balance.toString();
         await Artist.findOneAndUpdate({_id:withdraw.artistId},{
