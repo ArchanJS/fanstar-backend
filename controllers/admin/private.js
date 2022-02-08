@@ -107,7 +107,9 @@ exports.getOrdersofAnArtist=async(req,res)=>{
 //Get payments of a particular artist
 exports.getPaymentOfAnArtist=async(req,res)=>{
     try {
-        const payments=await Payment.find({artistId:req.params.artistId});
+        const servicePayments=await Payment.find({artistId:req.params.artistId,isAlbum:false}).populate("userId").populate("serviceId");
+        const albumPayments=await Payment.find({artistId:req.params.artistId,isAlbum:true}).populate("userId");
+        const payments=[...servicePayments,...albumPayments];
         res.status(200).send(payments);
     } catch (error) {
         console.log(error);
