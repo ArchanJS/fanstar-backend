@@ -1,5 +1,6 @@
 const router=require('express').Router();
-const {createChat,getAChat,fetchAllChatsOfAnArtist}=require('../../controllers/chat/chat');
+const {createChat,getAChat,fetchAllChatsOfAnArtist,fetchAllChatsOfAnUser}=require('../../controllers/chat/chat');
+const {protectUser}=require('../../middlewares/protect');
 
 //Create chat
 //Route : '/api/chat/createchat'
@@ -27,6 +28,15 @@ router.get('/getachat/:roomId',getAChat);
 //Token : Yes
 
 router.get('/getallchats/:artistId',fetchAllChatsOfAnArtist);
+
+//Get all chats of an user
+//Route : '/api/chat/getallchatsofuser'
+//Method : GET
+//Body : N/A
+//Params : {userId}
+//Token : Yes
+
+router.get('/getallchatsofuser',protectUser,fetchAllChatsOfAnUser);
 
 
 module.exports=router;
