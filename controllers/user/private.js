@@ -153,7 +153,15 @@ exports.buyServices = async (req, res) => {
         await payment.save();
         await User.findOneAndUpdate({phone:req.user.phone},{
           $set:{username,email,insta}
-        })
+        });
+        
+        let chat=await Chat.findOne({$and:[{userIds:{$all:[artist._id,req.user._id]}},{paymentId:payment._id}]});
+        if(!chat) {
+            chat=new Chat({userIds:[artist._id,req.user._id],paymentId:payment._id});
+            await chat.save();
+        }
+
+
         res.status(200).json({ message: "Service added!" });
       }
       else res.status(400).json({ error: "User doesn't have enough balance!" });
@@ -382,8 +390,8 @@ exports.completePayment=async(req,res)=>{
                       status:"completed"
                   }
               })
+              await Chat.deleteOne({paymentId:req.body.paymentId});
           }
-          await Chat.deleteOne({_id:req.body.roomId});
           res.status(200).json({message:"Marked as done!"});
       }
       else{

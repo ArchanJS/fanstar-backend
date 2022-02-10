@@ -121,7 +121,7 @@ exports.completePayment=async(req,res)=>{
                         status:"completed"
                     }
                 })
-                await Chat.deleteOne({_id:req.body.roomId});
+                await Chat.deleteOne({paymentId:req.body.paymentId});
             }
             res.status(200).json({message:"Marked as done!"});
         }
