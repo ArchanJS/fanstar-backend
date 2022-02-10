@@ -2,7 +2,7 @@ const router=require('express').Router();
 const multer=require('multer');
 const upload=multer({dest:'uploads/'});
 const {protectArtist}=require('../../middlewares/protect');
-const {getOwnProfile,createService,updateService,completePayment,getOwnServices,createAlbum,deleteFile,readFile,addEvent,deleteEvent,updateProfile,getService,getAllOwnFiles,getOwnPayments,changeTheme,getOwnPendingOrders,createWithdrawReq,getOwnWithdrawals,deleteService}=require('../../controllers/artist/private');
+const {getOwnProfile,createService,updateService,completePayment,getOwnServices,createAlbum,deleteFile,readFile,addEvent,deleteEvent,updateProfile,getService,getAllOwnFiles,getOwnPayments,changeTheme,getOwnPendingOrders,createWithdrawReq,getOwnWithdrawals,deleteService,updateAlbum,getAllOwnAlbums,getAParticularAlbum}=require('../../controllers/artist/private');
 
 //Get a own profile
 //Route : '/api/artist/private/getownprofile'
@@ -87,10 +87,34 @@ router.get('/ownservices',protectArtist,getOwnServices);
 //Upload a file
 //Route : '/api/artist/private/createalbum'
 //Method : POST
-//Body : file
+//Body : {file,albumName,caption,price}
 //Params : N/A
 //Token : Yes
 router.post('/createalbum',protectArtist,upload.single('artistFile'),createAlbum);
+
+//Update an album
+//Route : '/api/artist/private/updatealbum/:albumId'
+//Method : PUT
+//Body : {file,caption}
+//Params : N/A
+//Token : Yes
+router.put('/updatealbum/:albumId',protectArtist,upload.single('artistFile'),updateAlbum);
+
+//Get all own albums
+//Route : '/api/artist/private/getallownalbums'
+//Method : GET
+//Body : N/A
+//Params : N/A
+//Token : Yes
+router.get('/getallownalbums',protectArtist,getAllOwnAlbums);
+
+//Get a particular album
+//Route : '/api/artist/private/getaparticularalbum/:albumId'
+//Method : GET
+//Body : N/A
+//Params : N/A
+//Token : Yes
+router.get('/getaparticularalbum/:albumId',protectArtist,getAParticularAlbum);
 
 //Read a file
 //Route : '/api/artist/private/readfile/:fileKey'

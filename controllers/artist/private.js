@@ -156,7 +156,7 @@ exports.getOwnServices = async (req, res) => {
     }
 }
 
-//Upload image
+//Create an album
 exports.createAlbum = async (req, res) => {
     try {
         const file = req.file;
@@ -167,12 +167,54 @@ exports.createAlbum = async (req, res) => {
         })
         await album.save(); 
         unlinkFile(file.path);
-        res.status(201).json({ message: "File uploaded!" });
+        res.status(201).json({ message: "Photo uploaded!" });
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: "Something went wrong!" });
     }
 }
+
+//Add image to an album
+exports.updateAlbum = async (req, res) => {
+    try {
+        const file = req.file;
+        const {caption}=req.body;
+        let data = await uploadImage(file);
+        await Album.findOneAndUpdate({_id:req.params.albumId},{
+            $push:{
+                images:{fileUrl:data,caption}
+            }
+        })
+        unlinkFile(file.path);
+        res.status(200).json({ message: "Photo uploaded!" });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Something went wrong!" });
+    }
+}
+
+//Get all own albums
+exports.getAllOwnAlbums=async(req,res)=>{
+    try {
+        const albums=await Album.find({postedBy:req.artist._id});
+        res.status(200).send(albums);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Something went wrong!" });
+    }
+}
+
+//Get a particular album
+exports.getAParticularAlbum=async(req,res)=>{
+    try {
+        const album=await Album.findOne({_id:req.params.albumId});
+        res.status(200).send(album);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Something went wrong!" });
+    }
+}
+
 
 //Read file
 exports.readFile = async (req, res) => {
