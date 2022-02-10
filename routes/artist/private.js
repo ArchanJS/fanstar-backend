@@ -2,7 +2,7 @@ const router=require('express').Router();
 const multer=require('multer');
 const upload=multer({dest:'uploads/'});
 const {protectArtist}=require('../../middlewares/protect');
-const {getOwnProfile,createService,updateService,completePayment,getOwnServices,uploadFile,deleteFile,readFile,addEvent,deleteEvent,updateProfile,getService,getAllOwnFiles,getOwnPayments,changeTheme,getOwnPendingOrders,createWithdrawReq,getOwnWithdrawals}=require('../../controllers/artist/private');
+const {getOwnProfile,createService,updateService,completePayment,getOwnServices,createAlbum,deleteFile,readFile,addEvent,deleteEvent,updateProfile,getService,getAllOwnFiles,getOwnPayments,changeTheme,getOwnPendingOrders,createWithdrawReq,getOwnWithdrawals,deleteService}=require('../../controllers/artist/private');
 
 //Get a own profile
 //Route : '/api/artist/private/getownprofile'
@@ -60,6 +60,14 @@ router.get('/getservice/:serviceId',protectArtist,getService);
 //Token : Yes
 router.put('/updateservice/:serviceId',protectArtist,updateService);
 
+//Delete a service
+//Route : '/api/artist/private/deleteservice/:serviceId'
+//Method : DELETE
+//Body : N/A
+//Params : serviceId
+//Token : Yes
+router.delete('/deleteservice/:serviceId',protectArtist,deleteService);
+
 //Complete a payment
 //Route : '/api/artist/private/completepayment'
 //Method : PUT
@@ -77,12 +85,12 @@ router.put('/completepayment',protectArtist,completePayment);
 router.get('/ownservices',protectArtist,getOwnServices);
 
 //Upload a file
-//Route : '/api/artist/private/uploadfile'
+//Route : '/api/artist/private/createalbum'
 //Method : POST
 //Body : file
 //Params : N/A
 //Token : Yes
-router.post('/uploadfile',protectArtist,upload.single('artistFile'),uploadFile);
+router.post('/createalbum',protectArtist,upload.single('artistFile'),createAlbum);
 
 //Read a file
 //Route : '/api/artist/private/readfile/:fileKey'

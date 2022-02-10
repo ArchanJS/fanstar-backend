@@ -135,7 +135,7 @@ exports.buyServices = async (req, res) => {
         })
         const artist = await Artist.findOne({ _id: service.createdBy });
         let aBalance = parseFloat(artist.balance);
-        aBalance = aBalance + (servicePrice * 70.00 / 100.00);
+        aBalance = aBalance + (servicePrice * parseFloat(artist.commission) / 100.00);
         aBalance = aBalance.toString();
         await Artist.updateOne({ _id: artist._id }, {
           $set: {
@@ -149,7 +149,7 @@ exports.buyServices = async (req, res) => {
             balance: uBalance
           }
         })
-        const payment=new Payment({artistId:service.createdBy,userId:req.user,amount:service.amount,serviceId:service._id,status:"pending"});
+        const payment=new Payment({artistId:service.createdBy,userId:req.user,serviceName:service.serviceName,serviceDescription:service.description,amount:service.amount,serviceId:service._id,status:"pending"});
         await payment.save();
         await User.findOneAndUpdate({phone:req.user.phone},{
           $set:{username,email,insta}

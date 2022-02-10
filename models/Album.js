@@ -1,15 +1,20 @@
 const mongoose=require('mongoose');
 
 const albumSchema=new mongoose.Schema({
-    fileUrl:{
-        type:String,
-        required:true
+    albumName:{
+        type:String
     },
-    caption:{
-        type:String,
-        maxlength:500,
-        required:true
-    },
+    images:[{
+        fileUrl:{
+            type:String,
+            required:true
+        },
+        caption:{
+            type:String,
+            maxlength:500,
+            required:true
+        }
+    }],
     price:{
         type:String,
         required:true
@@ -26,10 +31,6 @@ const albumSchema=new mongoose.Schema({
         },
         time:{
             type:String
-        },
-        subscriber:{
-            type:Boolean,
-            default:false
         }
     }]
 },{timestamps:true})

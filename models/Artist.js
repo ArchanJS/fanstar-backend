@@ -39,6 +39,9 @@ const artistSchema=new mongoose.Schema({
         type:String,
         default:"black"
     },
+    commission:{
+        type:String
+    },
     feedbacks:[{
         userId:{
             type:mongoose.Schema.Types.ObjectId,

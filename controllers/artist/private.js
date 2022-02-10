@@ -104,6 +104,17 @@ exports.updateService = async (req, res) => {
     }
 }
 
+//Delete a service
+exports.deleteService=async(req,res)=>{
+    try {
+        await Service.deleteOne({_id:req.params.serviceId});
+        res.status(200).json({message:"Service deleted!"});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Something went wrong!" });
+    }
+}
+
 //Complete service
 exports.completePayment=async(req,res)=>{
     try {
@@ -146,13 +157,13 @@ exports.getOwnServices = async (req, res) => {
 }
 
 //Upload image
-exports.uploadFile = async (req, res) => {
+exports.createAlbum = async (req, res) => {
     try {
         const file = req.file;
-        const {caption,price}=req.body;
+        const {albumName,caption,price}=req.body;
         let data = await uploadImage(file);
         const album=new Album({
-            fileUrl:data,postedBy:req.artist._id,caption,price
+            albumName,images:[{fileUrl:data,caption}],postedBy:req.artist._id,price
         })
         await album.save(); 
         unlinkFile(file.path);

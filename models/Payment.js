@@ -15,6 +15,12 @@ const paymentSchema=new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:'service'
     },
+    serviceName:{
+        type:String
+    },
+    serviceDescription:{
+        type:String
+    },
     amount:{
         type:String,
         required:true
