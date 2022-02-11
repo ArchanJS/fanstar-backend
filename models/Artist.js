@@ -42,6 +42,9 @@ const artistSchema=new mongoose.Schema({
     commission:{
         type:String
     },
+    chatPrice:{
+        type:String
+    },
     feedbacks:[{
         userId:{
             type:mongoose.Schema.Types.ObjectId,

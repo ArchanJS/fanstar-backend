@@ -1,5 +1,5 @@
 const router=require('express').Router();
-const {buyServices,order,capture,buyAlbum,getArtist,getAService,readFile,getOwnDetails,getAlbum,giveFeedback,removeAlbumAccess,getAlbumTimestamp,subscribe, unsubscribe,getServiceWithName,completePayment,getPaymentsOfAUser}=require('../../controllers/user/private');
+const {buyServices,order,capture,buyAlbum,getArtist,getAService,readFile,getOwnDetails,getAlbum,giveFeedback,removeAlbumAccess,getAlbumTimestamp,subscribe, unsubscribe,getServiceWithName,completePayment,getPaymentsOfAUser,dedudctBalanceWhileChatting}=require('../../controllers/user/private');
 const {protectUser}=require('../../middlewares/protect');
 
 //Get own details
@@ -137,5 +137,13 @@ router.put('/completepayment',protectUser,completePayment);
 //Params : N/A
 //Token : Yes
 router.get('/getpaymentsofauser',protectUser,getPaymentsOfAUser);
+
+//
+//Route : '/api/user/private/deductbalance'
+//Method : PUT
+//Body : {roomId}
+//Params : N/A
+//Token : Yes
+router.put('/deductbalance',protectUser,dedudctBalanceWhileChatting);
 
 module.exports=router;

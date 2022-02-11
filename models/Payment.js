@@ -25,6 +25,10 @@ const paymentSchema=new mongoose.Schema({
         type:String,
         required:true
     },
+    isChat:{
+        type:String,
+        default:false
+    },
     isAlbum:{
         type:Boolean,
         default:false

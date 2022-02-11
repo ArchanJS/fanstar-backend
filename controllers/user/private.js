@@ -216,7 +216,7 @@ exports.buyAlbum=async (req, res) => {
         })
         const artist = await Artist.findOne({ _id: album.postedBy });
         let aBalance = parseFloat(artist.balance);
-        aBalance = aBalance + (albumPrice * 70.00 / 100.00);
+        aBalance = aBalance + (albumPrice * parseFloat(artist.commission) / 100.00);
         aBalance = aBalance.toString();
         await Artist.updateOne({ _id: artist._id }, {
           $set: {
@@ -409,7 +409,42 @@ exports.getPaymentsOfAUser=async(req,res)=>{
     const payments=await Payment.find({userId:req.user._id,isAlbum:false}).populate("serviceId").populate("userId");
     res.status(200).send(payments);
   } catch (error) {
-    console.log(error);
+      console.log(error);
       res.status(500).json({ error: "Something went wrong!" });
+  }
+}
+
+//Deduct balance while chatting
+exports.dedudctBalanceWhileChatting=async(req,res)=>{
+  try {
+    const chat=await Chat.findOne({_id:req.body.roomId});
+    let artist=await Artist.findOne({_id:chat.userIds[0]});
+    if(!artist) artist=await Artist.findOne({_id:chat.userIds[1]});
+    let uBalance = parseFloat(req.user.balance);
+    let aBalance = parseFloat(artist.balance);
+    const chatPrice=parseFloat(artist.chatPrice);
+    if(uBalance>=chatPrice){
+      aBalance = aBalance + (chatPrice * parseFloat(artist.commission) / 100.00);
+    aBalance = aBalance.toString();
+    await Artist.updateOne({ _id: artist._id }, {
+      $set: {
+        balance: aBalance
+      }
+    })
+    uBalance = uBalance - chatPrice;
+    uBalance = uBalance.toString();
+    await User.updateOne({ _id: req.user._id }, {
+      $set: {
+        balance: uBalance
+      }
+    })
+    const payment=new Payment({artistId:artist._id,userId:req.user._id,serviceName:"Chat",amount:chatPrice.toString(),isChat:true,status:"completed"});
+    await payment.save();
+    res.status(200).json({message:"Balance deducted!"});
+    }
+    else res.status(400).json({error:"User doesn't have enough balance!"});
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Something went wrong!" });
   }
 }

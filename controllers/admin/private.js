@@ -42,12 +42,12 @@ exports.getAllEmployees=async(req,res)=>{
 //Create artist
 exports.createArtist=async(req,res)=>{
     try {
-        const {username,phone,email,address,assignedEmployee,appName,accountNo,ifscCode,upiId,services}=req.body;
+        const {username,phone,email,address,commission,chatPrice,assignedEmployee,appName,accountNo,ifscCode,upiId,services}=req.body;
         console.log(username);
         const exists=await Artist.findOne({phone});
         if(exists) res.status(400).json({error:"Artist already exists!"});
         else{
-            const artist=new Artist({username,phone,email,address,assignedEmployee,appName,accountNo,upiId,ifscCode});
+            const artist=new Artist({username,phone,email,address,commission,chatPrice,assignedEmployee,appName,accountNo,upiId,ifscCode});
             await artist.save();
             services.forEach(async e=>{
                 let service=new Service({serviceName:e.serviceName,amount:e.amount,description:e.description,createdBy:artist._id});
