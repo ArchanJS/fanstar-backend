@@ -2,7 +2,7 @@ const router=require('express').Router();
 const multer=require('multer');
 const upload=multer({dest:'uploads/'});
 const {protectArtist}=require('../../middlewares/protect');
-const {getOwnProfile,createService,updateService,completePayment,getOwnServices,createAlbum,deleteFile,readFile,addEvent,deleteEvent,updateProfile,getService,getAllOwnFiles,getOwnPayments,changeTheme,getOwnPendingOrders,createWithdrawReq,getOwnWithdrawals,deleteService,updateAlbum,getAllOwnAlbums,getAParticularAlbum}=require('../../controllers/artist/private');
+const {getOwnProfile,createService,updateService,completePayment,getOwnServices,createAlbum,deleteFile,readFile,addEvent,deleteEvent,updateProfile,getService,getAllOwnFiles,getOwnPayments,changeTheme,getOwnPendingOrders,createWithdrawReq,getOwnWithdrawals,deleteService,updateAlbum,getAllOwnAlbums,getAParticularAlbum,uploadSingleImage,getOwnSingleImages,getParticularSingleImage}=require('../../controllers/artist/private');
 
 //Get a own profile
 //Route : '/api/artist/private/getownprofile'
@@ -84,13 +84,21 @@ router.put('/completepayment',protectArtist,completePayment);
 //Token : Yes
 router.get('/ownservices',protectArtist,getOwnServices);
 
-//Upload a file
+//Upload images
 //Route : '/api/artist/private/createalbum'
 //Method : POST
 //Body : {file,albumName,caption,price}
 //Params : N/A
 //Token : Yes
 router.post('/createalbum',protectArtist,upload.array('artistFile'),createAlbum);
+
+//Upload an image
+//Route : '/api/artist/private/uploadimage'
+//Method : POST
+//Body : {file,caption,price}
+//Params : N/A
+//Token : Yes
+router.post('/uploadimage',protectArtist,upload.single('artistFile'),uploadSingleImage);
 
 //Update an album
 //Route : '/api/artist/private/updatealbum/:albumId'
@@ -108,6 +116,14 @@ router.put('/updatealbum/:albumId',protectArtist,upload.array('artistFile'),upda
 //Token : Yes
 router.get('/getallownalbums',protectArtist,getAllOwnAlbums);
 
+//Get all own images
+//Route : '/api/artist/private/getallownimages'
+//Method : GET
+//Body : N/A
+//Params : N/A
+//Token : Yes
+router.get('/getallownimages',protectArtist,getOwnSingleImages);
+
 //Get a particular album
 //Route : '/api/artist/private/getaparticularalbum/:albumId'
 //Method : GET
@@ -115,6 +131,14 @@ router.get('/getallownalbums',protectArtist,getAllOwnAlbums);
 //Params : N/A
 //Token : Yes
 router.get('/getaparticularalbum/:albumId',protectArtist,getAParticularAlbum);
+
+//Get a particular image
+//Route : '/api/artist/private/getanimage/:imageId'
+//Method : GET
+//Body : N/A
+//Params : imageId
+//Token : Yes
+router.get('/getanimage/:imageId',protectArtist,getParticularSingleImage);
 
 //Read a file
 //Route : '/api/artist/private/readfile/:fileKey'

@@ -4,6 +4,7 @@ const Album=require('../../models/Album');
 const Payment=require('../../models/Payment');
 const Chat=require('../../models/Chat');
 const Withdraw=require('../../models/Withdraw');
+const Image=require('../../models/Image');
 const fs = require('fs');
 const util = require('util');
 const unlinkFile = util.promisify(fs.unlink);
@@ -258,6 +259,44 @@ exports.deleteFile = async (req, res) => {
         await deleteImage(fileKey);
         await Album.deleteOne({fileUrl:fileKey});
         res.status(200).json({ message: "File deleted!" });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Something went wrong!" });
+    }
+}
+
+//Upload single image
+exports.uploadSingleImage=async(req,res)=>{
+    try {
+        const file=req.file;
+        const {caption,price}=req.body;
+        const data=await uploadImage(file);
+        const image=new Image({url:data,caption,price,postedBy:req.artist._id});
+        await image.save();
+        unlinkFile(file.path);
+        res.status(201).json({message:"Image uploaded!"});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Something went wrong!" });
+    }
+}
+
+//Get own single images
+exports.getOwnSingleImages=async(req,res)=>{
+    try {
+        const images=await Image.find({postedBy:req.artist._id});
+        res.status(200).send(images);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Something went wrong!" });
+    }
+}
+
+//Get a paricular image
+exports.getParticularSingleImage=async(req,res)=>{
+    try {
+        const image=await Image.findOne({_id:req.params.imageId});
+        res.status(200).send(image);
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: "Something went wrong!" });
