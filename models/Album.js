@@ -4,16 +4,11 @@ const albumSchema=new mongoose.Schema({
     albumName:{
         type:String
     },
+    description:{
+        type:String
+    },
     images:[{
-        fileUrl:{
-            type:String,
-            required:true
-        },
-        caption:{
-            type:String,
-            maxlength:500,
-            required:true
-        }
+        type:String
     }],
     price:{
         type:String,

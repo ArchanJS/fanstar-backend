@@ -2,7 +2,7 @@ const router=require('express').Router();
 const multer=require('multer');
 const upload=multer({dest:'uploads/'});
 const {protectArtist}=require('../../middlewares/protect');
-const {getOwnProfile,createService,updateService,completePayment,getOwnServices,createAlbum,deleteFile,readFile,addEvent,deleteEvent,updateProfile,getService,getAllOwnFiles,getOwnPayments,changeTheme,getOwnPendingOrders,createWithdrawReq,getOwnWithdrawals,deleteService,updateAlbum,getAllOwnAlbums,getAParticularAlbum,uploadSingleImage,getOwnSingleImages,getParticularSingleImage}=require('../../controllers/artist/private');
+const {getOwnProfile,createService,updateService,completePayment,getOwnServices,createAlbum,deleteFile,readFile,addEvent,deleteEvent,updateProfile,getService,getAllOwnFiles,getOwnPayments,changeTheme,getOwnPendingOrders,createWithdrawReq,getOwnWithdrawals,deleteService,updateAlbum,getAllOwnAlbums,getAParticularAlbum,uploadSingleImage,getOwnSingleImages,getParticularSingleImage,deleteAnAlbum,deleteSingleImage,removeImageFromAlbum}=require('../../controllers/artist/private');
 
 //Get a own profile
 //Route : '/api/artist/private/getownprofile'
@@ -103,10 +103,18 @@ router.post('/uploadimage',protectArtist,upload.single('artistFile'),uploadSingl
 //Update an album
 //Route : '/api/artist/private/updatealbum/:albumId'
 //Method : PUT
-//Body : {file,caption}
+//Body : {file,caption,description,price}
 //Params : N/A
 //Token : Yes
 router.put('/updatealbum/:albumId',protectArtist,upload.array('artistFile'),updateAlbum);
+
+//Remove image from album
+//Route : '/api/artist/private/removeimagefromalbum'
+//Method : PUT
+//Body : {albumId,url}
+//Params : N/A
+//Token : Yes
+router.put('/removeimagefromalbum',protectArtist,removeImageFromAlbum);
 
 //Get all own albums
 //Route : '/api/artist/private/getallownalbums'
@@ -157,12 +165,20 @@ router.get('/readfile/:fileKey',protectArtist,readFile);
 router.get('/getownfiles',protectArtist,getAllOwnFiles);
 
 //Delete a file
-//Route : '/api/artist/private/deletefile/:fileKey'
+//Route : '/api/artist/private/deletefile/:url'
 //Method : DELETE
 //Body : N/A
 //Params : fileKey
 //Token : Yes
-router.delete('/deletefile/:fileKey',protectArtist,deleteFile);
+router.delete('/deleteimage/:url',protectArtist,deleteSingleImage);
+
+//Delete an album
+//Route : '/api/artist/private/deletealbum/:albumId'
+//Method : DELETE
+//Body : N/A
+//Params : albumId
+//Token : Yes
+router.delete('/deletealbum/:albumId',protectArtist,deleteAnAlbum);
 
 //Add event
 //Route : '/api/artist/private/addevent'

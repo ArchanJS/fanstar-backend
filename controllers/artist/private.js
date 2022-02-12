@@ -161,13 +161,21 @@ exports.getOwnServices = async (req, res) => {
 exports.createAlbum = async (req, res) => {
     try {
         const files = req.files;
-        // console.log(files);
-        const {albumName,captions,price}=req.body;
+        console.log(files);
+        const {albumName,description,price}=req.body;
         const album=new Album({
-            albumName,postedBy:req.artist._id,price
+            albumName,postedBy:req.artist._id,price,description
         })
         await album.save(); 
-        c
+        for(let i=0;i<files.length;i++){
+            let data = await uploadImage(files[i]);
+            await Album.findOneAndUpdate({_id:album._id},{
+                $push:{
+                    images:data
+                }
+            })
+        unlinkFile(files[i].path);
+        }
         // console.log(files);
         res.status(201).json({ message: "Photo(s) uploaded!" });
     } catch (error) {
@@ -180,12 +188,11 @@ exports.createAlbum = async (req, res) => {
 exports.updateAlbum = async (req, res) => {
     try {
         const files = req.files;
-        const {captions}=req.body;
         for(let i=0;i<files.length;i++){
             let data = await uploadImage(files[i]);
             await Album.findOneAndUpdate({_id:req.params.albumId},{
                 $push:{
-                    images:{fileUrl:data,caption:captions[i]}
+                    images:data
                 }
             })
         unlinkFile(files[i].path);
@@ -197,6 +204,23 @@ exports.updateAlbum = async (req, res) => {
         // })
         // unlinkFile(file.path);
         res.status(200).json({ message: "Photo(s) uploaded!" });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Something went wrong!" });
+    }
+}
+
+//Remove and image from an album
+exports.removeImageFromAlbum=async(req,res)=>{
+    try {
+        const {albumId,url}=req.body;
+        await Album.findOneAndUpdate({_id:albumId},{
+            $pull:{
+                images:url
+            }
+        })
+        await deleteImage(url);
+        res.status(200).json({message:"Image removed from album!"});
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: "Something went wrong!" });
@@ -252,13 +276,28 @@ exports.getAllOwnFiles=async(req,res)=>{
     }
 }
 
-//Delete image
-exports.deleteFile = async (req, res) => {
+//Delete single image
+exports.deleteSingleImage = async (req, res) => {
     try {
-        const { fileKey } = req.params;
-        await deleteImage(fileKey);
-        await Album.deleteOne({fileUrl:fileKey});
-        res.status(200).json({ message: "File deleted!" });
+        const { url } = req.params;
+        await deleteImage(url);
+        await Image.deleteOne({url});
+        res.status(200).json({ message: "Image deleted!" });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Something went wrong!" });
+    }
+}
+
+//Delete an album
+exports.deleteAnAlbum = async (req, res) => {
+    try {
+        const album=await Album.findOne({_id:req.params.albumId});
+        for(let i=0;i<album.images.length;i++){
+            await deleteImage(album.images[i]);
+        }
+        await Album.deleteOne({_id:req.params.albumId});
+        res.status(200).json({ message: "Album deleted!" });
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: "Something went wrong!" });
