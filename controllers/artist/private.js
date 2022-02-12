@@ -159,15 +159,16 @@ exports.getOwnServices = async (req, res) => {
 //Create an album
 exports.createAlbum = async (req, res) => {
     try {
-        const file = req.file;
-        const {albumName,caption,price}=req.body;
-        let data = await uploadImage(file);
+        const files = req.files;
+        // console.log(files);
+        const {albumName,captions,price}=req.body;
         const album=new Album({
-            albumName,images:[{fileUrl:data,caption}],postedBy:req.artist._id,price
+            albumName,postedBy:req.artist._id,price
         })
         await album.save(); 
-        unlinkFile(file.path);
-        res.status(201).json({ message: "Photo uploaded!" });
+        c
+        // console.log(files);
+        res.status(201).json({ message: "Photo(s) uploaded!" });
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: "Something went wrong!" });
@@ -177,16 +178,24 @@ exports.createAlbum = async (req, res) => {
 //Add image to an album
 exports.updateAlbum = async (req, res) => {
     try {
-        const file = req.file;
-        const {caption}=req.body;
-        let data = await uploadImage(file);
-        await Album.findOneAndUpdate({_id:req.params.albumId},{
-            $push:{
-                images:{fileUrl:data,caption}
-            }
-        })
-        unlinkFile(file.path);
-        res.status(200).json({ message: "Photo uploaded!" });
+        const files = req.files;
+        const {captions}=req.body;
+        for(let i=0;i<files.length;i++){
+            let data = await uploadImage(files[i]);
+            await Album.findOneAndUpdate({_id:req.params.albumId},{
+                $push:{
+                    images:{fileUrl:data,caption:captions[i]}
+                }
+            })
+        unlinkFile(files[i].path);
+        }
+        // await Album.findOneAndUpdate({_id:req.params.albumId},{
+        //     $push:{
+        //         images:{fileUrl:data,caption}
+        //     }
+        // })
+        // unlinkFile(file.path);
+        res.status(200).json({ message: "Photo(s) uploaded!" });
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: "Something went wrong!" });

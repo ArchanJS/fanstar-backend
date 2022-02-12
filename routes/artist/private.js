@@ -90,7 +90,7 @@ router.get('/ownservices',protectArtist,getOwnServices);
 //Body : {file,albumName,caption,price}
 //Params : N/A
 //Token : Yes
-router.post('/createalbum',protectArtist,upload.single('artistFile'),createAlbum);
+router.post('/createalbum',protectArtist,upload.array('artistFile'),createAlbum);
 
 //Update an album
 //Route : '/api/artist/private/updatealbum/:albumId'
@@ -98,7 +98,7 @@ router.post('/createalbum',protectArtist,upload.single('artistFile'),createAlbum
 //Body : {file,caption}
 //Params : N/A
 //Token : Yes
-router.put('/updatealbum/:albumId',protectArtist,upload.single('artistFile'),updateAlbum);
+router.put('/updatealbum/:albumId',protectArtist,upload.array('artistFile'),updateAlbum);
 
 //Get all own albums
 //Route : '/api/artist/private/getallownalbums'
