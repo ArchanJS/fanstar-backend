@@ -1,8 +1,8 @@
-const router=require('express').Router();
-const multer=require('multer');
-const upload=multer({dest:'uploads/'});
-const {protectArtist}=require('../../middlewares/protect');
-const {getOwnProfile,createService,updateService,completePayment,getOwnServices,createAlbum,deleteFile,readFile,addEvent,deleteEvent,updateProfile,getService,getAllOwnFiles,getOwnPayments,changeTheme,getOwnPendingOrders,createWithdrawReq,getOwnWithdrawals,deleteService,updateAlbum,getAllOwnAlbums,getAParticularAlbum,uploadSingleImage,getOwnSingleImages,getParticularSingleImage,deleteAnAlbum,deleteSingleImage,removeImageFromAlbum,updateAnAlbumsDetails}=require('../../controllers/artist/private');
+const router = require('express').Router();
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
+const { protectArtist } = require('../../middlewares/protect');
+const { getOwnProfile, createService, updateService, completePayment, getOwnServices, createAlbum, deleteFile, readFile, addEvent, deleteEvent, updateProfile, getService, getAllOwnFiles, getOwnPayments, changeTheme, getOwnPendingOrders, createWithdrawReq, getOwnWithdrawals, deleteService, updateAlbum, getAllOwnAlbums, getAParticularAlbum, uploadSingleImage, getOwnSingleImages, getParticularSingleImage, deleteAnAlbum, deleteSingleImage, removeImageFromAlbum, updateAnAlbumsDetails, updateOwnChatPrice } = require('../../controllers/artist/private');
 
 //Get a own profile
 //Route : '/api/artist/private/getownprofile'
@@ -10,7 +10,7 @@ const {getOwnProfile,createService,updateService,completePayment,getOwnServices,
 //Body : N/A
 //Params : N/A
 //Token : Yes
-router.get('/getownprofile',protectArtist,getOwnProfile);
+router.get('/getownprofile', protectArtist, getOwnProfile);
 
 //Get own payments
 //Route : '/api/artist/private/getownpayments'
@@ -18,7 +18,7 @@ router.get('/getownprofile',protectArtist,getOwnProfile);
 //Body : N/A
 //Params : N/A
 //Token : Yes
-router.get('/getownpayments',protectArtist,getOwnPayments);
+router.get('/getownpayments', protectArtist, getOwnPayments);
 
 //Get own pending orders
 //Route : '/api/artist/private/getownpendingorders'
@@ -26,7 +26,7 @@ router.get('/getownpayments',protectArtist,getOwnPayments);
 //Body : N/A
 //Params : N/A
 //Token : Yes
-router.get('/getownpendingorders',protectArtist,getOwnPendingOrders);
+router.get('/getownpendingorders', protectArtist, getOwnPendingOrders);
 
 //Update profile
 //Route : '/api/artist/private/updateprofile'
@@ -34,7 +34,15 @@ router.get('/getownpendingorders',protectArtist,getOwnPendingOrders);
 //Body : {username,profilePhoto,bio}
 //Params : N/A
 //Token : Yes
-router.put('/updateprofile',protectArtist,updateProfile);
+router.put('/updateprofile', protectArtist, updateProfile);
+
+//Update own chat price
+//Route : '/api/artist/private/updatechatprice'
+//Method : PUT
+//Body : N/A
+//Params : N/A
+//Token : Yes
+router.put('/updatechatprice', protectArtist, updateOwnChatPrice);
 
 //Create service
 //Route : '/api/artist/private/createservice'
@@ -42,7 +50,7 @@ router.put('/updateprofile',protectArtist,updateProfile);
 //Body : {serviceName,amount,description}
 //Params : N/A
 //Token : Yes
-router.post('/createservice',protectArtist,createService);
+router.post('/createservice', protectArtist, createService);
 
 //Get a service
 //Route : '/api/artist/private/getservice/:serviceId'
@@ -50,7 +58,7 @@ router.post('/createservice',protectArtist,createService);
 //Body : N/A
 //Params : serviceId
 //Token : Yes
-router.get('/getservice/:serviceId',protectArtist,getService);
+router.get('/getservice/:serviceId', protectArtist, getService);
 
 //Update service
 //Route : '/api/artist/private/updateservice'
@@ -58,7 +66,7 @@ router.get('/getservice/:serviceId',protectArtist,getService);
 //Body : {serviceName,amount,description}
 //Params : serviceId
 //Token : Yes
-router.put('/updateservice/:serviceId',protectArtist,updateService);
+router.put('/updateservice/:serviceId', protectArtist, updateService);
 
 //Delete a service
 //Route : '/api/artist/private/deleteservice/:serviceId'
@@ -66,7 +74,7 @@ router.put('/updateservice/:serviceId',protectArtist,updateService);
 //Body : N/A
 //Params : serviceId
 //Token : Yes
-router.delete('/deleteservice/:serviceId',protectArtist,deleteService);
+router.delete('/deleteservice/:serviceId', protectArtist, deleteService);
 
 //Complete a payment
 //Route : '/api/artist/private/completepayment'
@@ -74,7 +82,7 @@ router.delete('/deleteservice/:serviceId',protectArtist,deleteService);
 //Body : {paymentId,roomId}
 //Params : N/A
 //Token : Yes
-router.put('/completepayment',protectArtist,completePayment);
+router.put('/completepayment', protectArtist, completePayment);
 
 //Get own services
 //Route : '/api/artist/private/ownservices'
@@ -82,7 +90,7 @@ router.put('/completepayment',protectArtist,completePayment);
 //Body : N/A
 //Params : N/A
 //Token : Yes
-router.get('/ownservices',protectArtist,getOwnServices);
+router.get('/ownservices', protectArtist, getOwnServices);
 
 //Upload images
 //Route : '/api/artist/private/createalbum'
@@ -90,7 +98,7 @@ router.get('/ownservices',protectArtist,getOwnServices);
 //Body : {file,albumName,caption,price}
 //Params : N/A
 //Token : Yes
-router.post('/createalbum',protectArtist,upload.array('artistFile'),createAlbum);
+router.post('/createalbum', protectArtist, upload.array('artistFile'), createAlbum);
 
 //Upload an image
 //Route : '/api/artist/private/uploadimage'
@@ -98,7 +106,7 @@ router.post('/createalbum',protectArtist,upload.array('artistFile'),createAlbum)
 //Body : {file,caption,price}
 //Params : N/A
 //Token : Yes
-router.post('/uploadimage',protectArtist,upload.single('artistFile'),uploadSingleImage);
+router.post('/uploadimage', protectArtist, upload.single('artistFile'), uploadSingleImage);
 
 //Update an album
 //Route : '/api/artist/private/updatealbum/:albumId'
@@ -106,7 +114,7 @@ router.post('/uploadimage',protectArtist,upload.single('artistFile'),uploadSingl
 //Body : {file,caption,description,price}
 //Params : N/A
 //Token : Yes
-router.put('/updatealbum/:albumId',protectArtist,upload.array('artistFile'),updateAlbum);
+router.put('/updatealbum/:albumId', protectArtist, upload.array('artistFile'), updateAlbum);
 
 //Remove image from album
 //Route : '/api/artist/private/removeimagefromalbum'
@@ -114,7 +122,7 @@ router.put('/updatealbum/:albumId',protectArtist,upload.array('artistFile'),upda
 //Body : {albumId,url}
 //Params : N/A
 //Token : Yes
-router.put('/removeimagefromalbum',protectArtist,removeImageFromAlbum);
+router.put('/removeimagefromalbum', protectArtist, removeImageFromAlbum);
 
 //Get all own albums
 //Route : '/api/artist/private/getallownalbums'
@@ -122,7 +130,7 @@ router.put('/removeimagefromalbum',protectArtist,removeImageFromAlbum);
 //Body : N/A
 //Params : N/A
 //Token : Yes
-router.get('/getallownalbums',protectArtist,getAllOwnAlbums);
+router.get('/getallownalbums', protectArtist, getAllOwnAlbums);
 
 //Get all own images
 //Route : '/api/artist/private/getallownimages'
@@ -130,7 +138,7 @@ router.get('/getallownalbums',protectArtist,getAllOwnAlbums);
 //Body : N/A
 //Params : N/A
 //Token : Yes
-router.get('/getallownimages',protectArtist,getOwnSingleImages);
+router.get('/getallownimages', protectArtist, getOwnSingleImages);
 
 //Get a particular album
 //Route : '/api/artist/private/getaparticularalbum/:albumId'
@@ -138,7 +146,7 @@ router.get('/getallownimages',protectArtist,getOwnSingleImages);
 //Body : N/A
 //Params : N/A
 //Token : Yes
-router.get('/getaparticularalbum/:albumId',protectArtist,getAParticularAlbum);
+router.get('/getaparticularalbum/:albumId', protectArtist, getAParticularAlbum);
 
 //Update an album's details
 //Route : '/api/artist/private/updatealbumdetails'
@@ -146,7 +154,7 @@ router.get('/getaparticularalbum/:albumId',protectArtist,getAParticularAlbum);
 //Body : {albumId,albumName,description,price}
 //Params : N/A
 //Token : Yes
-router.put('/updatealbumdetails',protectArtist,updateAnAlbumsDetails);
+router.put('/updatealbumdetails', protectArtist, updateAnAlbumsDetails);
 
 //Get a particular image
 //Route : '/api/artist/private/getanimage/:imageId'
@@ -154,7 +162,7 @@ router.put('/updatealbumdetails',protectArtist,updateAnAlbumsDetails);
 //Body : N/A
 //Params : imageId
 //Token : Yes
-router.get('/getanimage/:imageId',protectArtist,getParticularSingleImage);
+router.get('/getanimage/:imageId', protectArtist, getParticularSingleImage);
 
 //Read a file
 //Route : '/api/artist/private/readfile/:fileKey'
@@ -162,7 +170,7 @@ router.get('/getanimage/:imageId',protectArtist,getParticularSingleImage);
 //Body : N/A
 //Params : fileKey
 //Token : Yes
-router.get('/readfile/:fileKey',protectArtist,readFile);
+router.get('/readfile/:fileKey', protectArtist, readFile);
 
 //Read a file
 //Route : '/api/artist/private/getownfiles'
@@ -170,7 +178,7 @@ router.get('/readfile/:fileKey',protectArtist,readFile);
 //Body : N/A
 //Params : N/A
 //Token : Yes
-router.get('/getownfiles',protectArtist,getAllOwnFiles);
+router.get('/getownfiles', protectArtist, getAllOwnFiles);
 
 //Delete a file
 //Route : '/api/artist/private/deletefile/:url'
@@ -178,7 +186,7 @@ router.get('/getownfiles',protectArtist,getAllOwnFiles);
 //Body : N/A
 //Params : fileKey
 //Token : Yes
-router.delete('/deleteimage/:url',protectArtist,deleteSingleImage);
+router.delete('/deleteimage/:url', protectArtist, deleteSingleImage);
 
 //Delete an album
 //Route : '/api/artist/private/deletealbum/:albumId'
@@ -186,7 +194,7 @@ router.delete('/deleteimage/:url',protectArtist,deleteSingleImage);
 //Body : N/A
 //Params : albumId
 //Token : Yes
-router.delete('/deletealbum/:albumId',protectArtist,deleteAnAlbum);
+router.delete('/deletealbum/:albumId', protectArtist, deleteAnAlbum);
 
 //Add event
 //Route : '/api/artist/private/addevent'
@@ -194,7 +202,7 @@ router.delete('/deletealbum/:albumId',protectArtist,deleteAnAlbum);
 //Body : {summary,startTime,endTime,location,description,colorId,attendees}
 //Params : N/A
 //Token : Yes
-router.post('/addevent',protectArtist,addEvent);
+router.post('/addevent', protectArtist, addEvent);
 
 //Delete an event
 //Route : '/api/artist/private/deleteevent/:eventId'
@@ -202,7 +210,7 @@ router.post('/addevent',protectArtist,addEvent);
 //Body : N/A
 //Params : eventId
 //Token : Yes
-router.delete('/deleteevent/:eventId',protectArtist,deleteEvent);
+router.delete('/deleteevent/:eventId', protectArtist, deleteEvent);
 
 //Change theme
 //Route : '/api/artist/private/changetheme'
@@ -210,7 +218,7 @@ router.delete('/deleteevent/:eventId',protectArtist,deleteEvent);
 //Body : {theme}
 //Params : N/A
 //Token : Yes
-router.put('/changetheme',protectArtist,changeTheme);
+router.put('/changetheme', protectArtist, changeTheme);
 
 //Add event
 //Route : '/api/artist/private/withdraw'
@@ -218,7 +226,7 @@ router.put('/changetheme',protectArtist,changeTheme);
 //Body : {amount}
 //Params : N/A
 //Token : Yes
-router.post('/withdraw',protectArtist,createWithdrawReq);
+router.post('/withdraw', protectArtist, createWithdrawReq);
 
 //Read a get
 //Route : '/api/artist/private/getownwithdrawals'
@@ -226,6 +234,6 @@ router.post('/withdraw',protectArtist,createWithdrawReq);
 //Body : N/A
 //Params : N/A
 //Token : Yes
-router.get('/getownwithdrawals',protectArtist,getOwnWithdrawals);
+router.get('/getownwithdrawals', protectArtist, getOwnWithdrawals);
 
-module.exports=router;
+module.exports = router;
