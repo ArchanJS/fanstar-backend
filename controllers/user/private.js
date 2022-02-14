@@ -291,7 +291,7 @@ exports.buyImage=async (req, res) => {
 //Subscribe
 exports.subscribe=async (req, res) => {
   try {
-    const { albumId } = req.body;
+    const { albumId,username,email,insta } = req.body;
     const album = await Album.findOne({ _id:albumId });
     if (!album) res.status(400).json({ error: "No album exists!" });
     else {
@@ -316,7 +316,7 @@ exports.subscribe=async (req, res) => {
         uBalance = uBalance.toString();
         await User.updateOne({ _id: req.user._id }, {
           $set: {
-            balance: uBalance
+            balance: uBalance,username,email,insta
           }
         })
         albumPrice=albumPrice.toString();
