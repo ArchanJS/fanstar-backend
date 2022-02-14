@@ -320,7 +320,7 @@ exports.subscribe=async (req, res) => {
           }
         })
         albumPrice=albumPrice.toString();
-        const payment=new Payment({artistId:album.postedBy,albumId,userId:req.user._id,amount:albumPrice,isAlbum:true,status:"pending"});
+        const payment=new Payment({artistId:album.postedBy,albumId,userId:req.user._id,amount:albumPrice,isAlbum:true,status:"completed"});
         await payment.save();
         res.status(200).json({ message: "Subscription added!" });
       }
@@ -389,11 +389,11 @@ exports.checkIfSubscribed=async(req,res)=>{
             accessedBy:{userId:req.user._id}
           }
         })
-        await Payment.findOneAndUpdate({artistId:album.postedBy,userId:req.user._id,isAlbum:true,albumId:req.body.albumId,status:"pending"},{
-          $set:{
-            status:"completed"
-          }
-        })
+        // await Payment.findOneAndUpdate({artistId:album.postedBy,userId:req.user._id,isAlbum:true,albumId:req.body.albumId,status:"pending"},{
+        //   $set:{
+        //     status:"completed"
+        //   }
+        // })
         res.status(200).json({isSubscriber:false});
       }
     }
