@@ -1,5 +1,5 @@
 const router=require('express').Router();
-const {buyServices,order,capture,buyImage,getArtist,getAService,readFile,getOwnDetails,getAlbum,giveFeedback,removeimageAccess,subscribe, unsubscribe,getServiceWithName,completePayment,getPaymentsOfAUser,dedudctBalanceWhileChatting,getAllImagesOfAnArtist,getAllAlbumsOfAnArtist,getAParticularAlbum, getImageTimestamp,checkIfSubscribed}=require('../../controllers/user/private');
+const {buyServices,order,capture,buyImage,getArtist,getAService,readFile,getOwnDetails,getAlbum,giveFeedback,removeimageAccess,subscribe, unsubscribe,getServiceWithName,completePayment,getPaymentsOfAUser,dedudctBalanceWhileChatting,getAllImagesOfAnArtist,getAllAlbumsOfAnArtist,getAParticularAlbum, getImageTimestamp,checkIfSubscribed,getAParticularImage}=require('../../controllers/user/private');
 const {protectUser}=require('../../middlewares/protect');
 
 //Get own details
@@ -73,6 +73,14 @@ router.get('/readimage/:fileKey',protectUser,readFile);
 //Params : {artistId}
 //Token : Yes
 router.get('/getallimages/:artistId',getAllImagesOfAnArtist);
+
+//Get a particular imagee
+//Route : '/api/user/private/getanimage/:imageId'
+//Method : GET
+//Body : N/A
+//Params : {imageId}
+//Token : Yes
+router.get('/getanimage/:imageId',protectUser,getAParticularImage);
 
 //Get all albums of an artist
 //Route : '/api/user/private/getallalbums/:artistId'

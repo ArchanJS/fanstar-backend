@@ -117,6 +117,17 @@ exports.getAllImagesOfAnArtist=async(req,res)=>{
   }
 }
 
+//Get a particular image
+exports.getAParticularImage=async(req,res)=>{
+  try {
+    const image=await Image.findOne({_id:req.params.imageId});
+    res.status(200).send(image);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Something went wrong!" });
+  }
+}
+
 //Get all albums of an artist
 exports.getAllAlbumsOfAnArtist=async(req,res)=>{
   try {
