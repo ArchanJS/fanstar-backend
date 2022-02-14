@@ -1,5 +1,5 @@
 const router=require('express').Router();
-const {buyServices,order,capture,buyImage,getArtist,getAService,readFile,getOwnDetails,getAlbum,giveFeedback,removeimageAccess,subscribe, unsubscribe,getServiceWithName,completePayment,getPaymentsOfAUser,dedudctBalanceWhileChatting,getAllImagesOfAnArtist,getAllAlbumsOfAnArtist,getAParticularAlbum, getImageTimestamp}=require('../../controllers/user/private');
+const {buyServices,order,capture,buyImage,getArtist,getAService,readFile,getOwnDetails,getAlbum,giveFeedback,removeimageAccess,subscribe, unsubscribe,getServiceWithName,completePayment,getPaymentsOfAUser,dedudctBalanceWhileChatting,getAllImagesOfAnArtist,getAllAlbumsOfAnArtist,getAParticularAlbum, getImageTimestamp,checkIfSubscribed}=require('../../controllers/user/private');
 const {protectUser}=require('../../middlewares/protect');
 
 //Get own details
@@ -129,6 +129,14 @@ router.post('/givefeedback',protectUser,giveFeedback);
 //Params : N/A
 //Token : Yes
 router.put('/subscribe',protectUser,subscribe);
+
+//Check if subscribed
+//Route : '/api/user/private/checkifsubscribed'
+//Method : PUT
+//Body : {albumId}
+//Params : N/A
+//Token : Yes
+router.put('/checkifsubscribed',protectUser,checkIfSubscribed);
 
 //Unsubscribe to a user's album
 //Route : '/api/user/private/unsubscribe'

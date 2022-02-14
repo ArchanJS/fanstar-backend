@@ -15,6 +15,10 @@ const paymentSchema=new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:'service'
     },
+    albumId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'album'
+    },
     serviceName:{
         type:String
     },

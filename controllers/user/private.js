@@ -280,26 +280,23 @@ exports.buyImage=async (req, res) => {
 //Subscribe
 exports.subscribe=async (req, res) => {
   try {
-    const { artistId } = req.body;
-    const albums = await Album.find({ postedBy: artistId });
-    if (albums.length==0) res.status(400).json({ error: "No album exists!" });
+    const { albumId } = req.body;
+    const album = await Album.findOne({ _id:albumId });
+    if (!album) res.status(400).json({ error: "No album exists!" });
     else {
       let uBalance = parseFloat(req.user.balance);
-      let albumPrice = 0;
-      albums.forEach(e=>{
-        albumPrice+=parseFloat(e.price);
-      })
+      let albumPrice = parseFloat(album.price);
       if (uBalance >= albumPrice) {
-        await Album.updateMany({ postedBy: artistId }, {
+        await Album.updateOne({ _id:albumId }, {
           $push: {
-            accessedBy: {userId:req.user._id,time:moment().format(),subscriber:true}
+            accessedBy: {userId:req.user._id,time:moment().format()}
           }
         })
-        const artist = await Artist.findOne({ _id: artistId });
+        const artist = await Artist.findOne({ _id: album.postedBy });
         let aBalance = parseFloat(artist.balance);
-        aBalance = aBalance + (albumPrice * 70.00 / 100.00);
+        aBalance = aBalance + (albumPrice * parseFloat(artist.commission) / 100.00);
         aBalance = aBalance.toString();
-        await Artist.updateOne({ _id: artistId }, {
+        await Artist.updateOne({ _id: album.postedBy }, {
           $set: {
             balance: aBalance
           }
@@ -312,7 +309,7 @@ exports.subscribe=async (req, res) => {
           }
         })
         albumPrice=albumPrice.toString();
-        const payment=new Payment({artistId,userId:req.user._id,amount:albumPrice,isAlbum:true,status:"pending"});
+        const payment=new Payment({artistId:album.postedBy,albumId,userId:req.user._id,amount:albumPrice,isAlbum:true,status:"pending"});
         await payment.save();
         res.status(200).json({ message: "Subscription added!" });
       }
@@ -354,6 +351,41 @@ exports.unsubscribe=async(req,res)=>{
       }
     })
     res.status(200).json({message:"Unsubscribed!"});
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({error:"Something went wrong!"});
+  }
+}
+
+//Check if subscribed
+exports.checkIfSubscribed=async(req,res)=>{
+  try {
+    const album=await Album.findOne({_id:req.body.albumId});
+    let isSubscriber=false,ts=null;
+    album.accessedBy.forEach((e)=>{
+      if(e.userId.toString().trim()==req.user._id.toString().trim()){
+        isSubscriber=true;
+        ts=e.time;
+      }
+    })
+    if(isSubscriber==false) res.status(200).json({isSubscriber:false});
+    else{
+      const time=new Date()-new Date(ts);
+      if(time<2592000000) res.status(200).json({isSubscriber:true});
+      else{
+        await Album.findOneAndUpdate({_id:req.body.albumId},{
+          $pull:{
+            accessedBy:{userId:req.user._id}
+          }
+        })
+        await Payment.findOneAndUpdate({artistId:album.postedBy,userId:req.user._id,isAlbum:true,albumId:req.body.albumId,status:"pending"},{
+          $set:{
+            status:"completed"
+          }
+        })
+        res.status(200).json({isSubscriber:false});
+      }
+    }
   } catch (error) {
     console.log(error);
     res.status(500).json({error:"Something went wrong!"});
