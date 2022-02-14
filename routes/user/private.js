@@ -72,7 +72,7 @@ router.get('/readimage/:fileKey',protectUser,readFile);
 //Body : N/A
 //Params : {artistId}
 //Token : Yes
-router.get('/getallimages/:artistId',protectUser,getAllImagesOfAnArtist);
+router.get('/getallimages/:artistId',getAllImagesOfAnArtist);
 
 //Get all albums of an artist
 //Route : '/api/user/private/getallalbums/:artistId'
@@ -80,7 +80,7 @@ router.get('/getallimages/:artistId',protectUser,getAllImagesOfAnArtist);
 //Body : N/A
 //Params : {artistId}
 //Token : Yes
-router.get('/getallalbums/:artistId',protectUser,getAllAlbumsOfAnArtist);
+router.get('/getallalbums/:artistId',getAllAlbumsOfAnArtist);
 
 //Get a particular album of an artist
 //Route : '/api/user/private/getanalbum/:albumId'
