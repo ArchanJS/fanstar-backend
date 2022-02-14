@@ -4,6 +4,7 @@ const Service = require('../../models/Service');
 const Album=require('../../models/Album');
 const Payment=require('../../models/Payment');
 const Chat=require('../../models/Chat');
+const Image = require('../../models/Image');
 const {readImage}=require('../../controllers/artist/aws');
 const Razorpay = require('razorpay');
 const request = require('request');
@@ -105,6 +106,39 @@ exports.capture = async (req, res) => {
   }
 }
 
+//Get all images of an artist
+exports.getAllImagesOfAnArtist=async(req,res)=>{
+  try {
+    const images=await Image.find({postedBy:req.params.artistId});
+    res.status(200).send(images);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Something went wrong!" });
+  }
+}
+
+//Get all albums of an artist
+exports.getAllAlbumsOfAnArtist=async(req,res)=>{
+  try {
+    const albums=await Album.find({postedBy:req.params.artistId});
+    res.status(200).send(albums);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Something went wrong!" });
+  }
+}
+
+//Get a particular album
+exports.getAParticularAlbum=async(req,res)=>{
+  try {
+    const album=await Album.findOne({_id:req.params.albumId});
+    res.status(200).send(album);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Something went wrong!" });
+  }
+}
+
 //Get an album
 exports.getAlbum=async(req,res)=>{
   try {
@@ -199,40 +233,40 @@ exports.readFile = async (req, res) => {
   }
 }
 
-//Buy album
-exports.buyAlbum=async (req, res) => {
+//Buy image
+exports.buyImage=async (req, res) => {
   try {
-    const { albumId } = req.body;
-    const album = await Album.findOne({ _id: albumId });
-    if (!album) res.status(400).json({ error: "Album not found!" });
+    const { imageId } = req.body;
+    const image = await Image.findOne({ _id: imageId });
+    if (!image) res.status(400).json({ error: "Image not found!" });
     else {
       let uBalance = parseFloat(req.user.balance);
-      let albumPrice = parseFloat(album.price);
-      if (uBalance >= albumPrice) {
-        await Album.updateOne({ _id: albumId }, {
+      let imagePrice = parseFloat(image.price);
+      if (uBalance >= imagePrice) {
+        await Image.updateOne({ _id: imageId }, {
           $push: {
             accessedBy: {userId:req.user._id,time:moment().format()}
           }
         })
-        const artist = await Artist.findOne({ _id: album.postedBy });
+        const artist = await Artist.findOne({ _id: image.postedBy });
         let aBalance = parseFloat(artist.balance);
-        aBalance = aBalance + (albumPrice * parseFloat(artist.commission) / 100.00);
+        aBalance = aBalance + (imagePrice * parseFloat(artist.commission) / 100.00);
         aBalance = aBalance.toString();
         await Artist.updateOne({ _id: artist._id }, {
           $set: {
             balance: aBalance
           }
         })
-        uBalance = uBalance - albumPrice;
+        uBalance = uBalance - imagePrice;
         uBalance = uBalance.toString();
         await User.updateOne({ _id: req.user._id }, {
           $set: {
             balance: uBalance
           }
         })
-        const payment=new Payment({artistId:album.postedBy,userId:req.user._id,amount:albumPrice,isAlbum:true,status:"completed"});
+        const payment=new Payment({artistId:image.postedBy,userId:req.user._id,amount:imagePrice,isAlbum:true,status:"completed"});
         await payment.save();
-        res.status(200).json({ message: "Album accessed!" });
+        res.status(200).json({ message: "Image accessed!" });
       }
       else res.status(400).json({ error: "User doesn't have enough balance!" });
 
@@ -291,10 +325,10 @@ exports.subscribe=async (req, res) => {
   }
 }
 
-//Remove album access
-exports.removeAlbumAccess=async(req,res)=>{
+//Remove image access
+exports.removeimageAccess=async(req,res)=>{
   try {
-    await Album.findOneAndUpdate({_id:req.body.albumId},{
+    await Image.findOneAndUpdate({_id:req.body.imageId},{
       $pull:{
         accessedBy:{userId:req.user._id}
       }
@@ -326,12 +360,12 @@ exports.unsubscribe=async(req,res)=>{
   }
 }
 
-//Get the timestamp, when the user accessed the album
-exports.getAlbumTimestamp=async(req,res)=>{
+//Get the timestamp, when the user accessed any image
+exports.getImageTimestamp=async(req,res)=>{
   try {
-    const album=await Album.findOne({_id:req.params.albumId});
+    const image=await Image.findOne({_id:req.params.imageId});
     let ts=null;
-    album.accessedBy.forEach(e=>{
+    image.accessedBy.forEach(e=>{
       if(e.userId.toString().trim()==req.user._id.toString().trim()) ts=e.time;
     })
     res.status(200).send(ts);

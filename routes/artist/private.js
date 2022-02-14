@@ -2,7 +2,7 @@ const router=require('express').Router();
 const multer=require('multer');
 const upload=multer({dest:'uploads/'});
 const {protectArtist}=require('../../middlewares/protect');
-const {getOwnProfile,createService,updateService,completePayment,getOwnServices,createAlbum,deleteFile,readFile,addEvent,deleteEvent,updateProfile,getService,getAllOwnFiles,getOwnPayments,changeTheme,getOwnPendingOrders,createWithdrawReq,getOwnWithdrawals,deleteService,updateAlbum,getAllOwnAlbums,getAParticularAlbum,uploadSingleImage,getOwnSingleImages,getParticularSingleImage,deleteAnAlbum,deleteSingleImage,removeImageFromAlbum}=require('../../controllers/artist/private');
+const {getOwnProfile,createService,updateService,completePayment,getOwnServices,createAlbum,deleteFile,readFile,addEvent,deleteEvent,updateProfile,getService,getAllOwnFiles,getOwnPayments,changeTheme,getOwnPendingOrders,createWithdrawReq,getOwnWithdrawals,deleteService,updateAlbum,getAllOwnAlbums,getAParticularAlbum,uploadSingleImage,getOwnSingleImages,getParticularSingleImage,deleteAnAlbum,deleteSingleImage,removeImageFromAlbum,updateAnAlbumsDetails}=require('../../controllers/artist/private');
 
 //Get a own profile
 //Route : '/api/artist/private/getownprofile'
@@ -139,6 +139,14 @@ router.get('/getallownimages',protectArtist,getOwnSingleImages);
 //Params : N/A
 //Token : Yes
 router.get('/getaparticularalbum/:albumId',protectArtist,getAParticularAlbum);
+
+//Update an album's details
+//Route : '/api/artist/private/updatealbumdetails'
+//Method : PUT
+//Body : {albumId,albumName,description,price}
+//Params : N/A
+//Token : Yes
+router.put('/updatealbumdetails',protectArtist,updateAnAlbumsDetails);
 
 //Get a particular image
 //Route : '/api/artist/private/getanimage/:imageId'

@@ -418,3 +418,17 @@ exports.getOwnWithdrawals=async(req,res)=>{
         res.status(500).json({ error: "Someting went wrong!" });
     }
 }
+
+//Update any album's details
+exports.updateAnAlbumsDetails=async(req,res)=>{
+    try {
+        const {albumId,albumName,description,price}=req.body;
+        await Album.findOneAndUpdate({_Id:albumId},{
+            $set:{albumName,description,price}
+        });
+        res.status(200).json({messages:"Album details updated!"});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Someting went wrong!" });
+    }
+}

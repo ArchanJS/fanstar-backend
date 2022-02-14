@@ -1,5 +1,5 @@
 const router=require('express').Router();
-const {buyServices,order,capture,buyAlbum,getArtist,getAService,readFile,getOwnDetails,getAlbum,giveFeedback,removeAlbumAccess,getAlbumTimestamp,subscribe, unsubscribe,getServiceWithName,completePayment,getPaymentsOfAUser,dedudctBalanceWhileChatting}=require('../../controllers/user/private');
+const {buyServices,order,capture,buyImage,getArtist,getAService,readFile,getOwnDetails,getAlbum,giveFeedback,removeimageAccess,subscribe, unsubscribe,getServiceWithName,completePayment,getPaymentsOfAUser,dedudctBalanceWhileChatting,getAllImagesOfAnArtist,getAllAlbumsOfAnArtist,getAParticularAlbum, getImageTimestamp}=require('../../controllers/user/private');
 const {protectUser}=require('../../middlewares/protect');
 
 //Get own details
@@ -66,29 +66,53 @@ router.post('/capture/:paymentId',protectUser,capture);
 //Token : Yes
 router.get('/readimage/:fileKey',protectUser,readFile);
 
-//Buy an album
-//Route : '/api/user/private/buyalbum'
-//Method : POST
-//Body : {albumId}
-//Params : N/A
+//Get all images of an artist
+//Route : '/api/user/private/getallimages/:artistId'
+//Method : GET
+//Body : N/A
+//Params : {artistId}
 //Token : Yes
-router.post('/buyalbum',protectUser,buyAlbum);
+router.get('/getallimages/:artistId',protectUser,getAllImagesOfAnArtist);
 
-//Get the timestamp, when the user accessed the album
-//Route : '/api/user/private/getalbumtimestamp'
+//Get all albums of an artist
+//Route : '/api/user/private/getallalbums/:artistId'
+//Method : GET
+//Body : N/A
+//Params : {artistId}
+//Token : Yes
+router.get('/getallalbums/:artistId',protectUser,getAllAlbumsOfAnArtist);
+
+//Get a particular album of an artist
+//Route : '/api/user/private/getanalbum/:albumId'
 //Method : GET
 //Body : N/A
 //Params : {albumId}
 //Token : Yes
-router.get('/getalbumtimestamp/:albumId',protectUser,getAlbumTimestamp);
+router.get('/getanalbum/:albumId',protectUser,getAParticularAlbum);
 
-//Remove album access
-//Route : '/api/user/private/removealbumaccess'
-//Method : PUT
-//Body : {albumId}
+//Buy an image
+//Route : '/api/user/private/buyimage'
+//Method : POST
+//Body : {imageId}
 //Params : N/A
 //Token : Yes
-router.put('/removealbumaccess',protectUser,removeAlbumAccess);
+router.post('/buyimage',protectUser,buyImage);
+
+//Get the timestamp, when the user accessed the album
+//Route : '/api/user/private/getimagetimestamp/:imageId'
+//Method : GET
+//Body : N/A
+//Params : {imageId}
+//Token : Yes
+router.get('/getimagetimestamp/:imageId',protectUser,getImageTimestamp);
+
+//Remove album access
+//Route : '/api/user/private/removeimageaccess'
+//Method : PUT
+//Body : {imageId}
+//Params : N/A
+//Token : Yes
+router.put('/removeimageaccess',protectUser,removeimageAccess);
 
 //Give feedback
 //Route : '/api/user/private/givefeedback'
