@@ -44,6 +44,9 @@ app.use('/api/admin/private',require('./routes/admin/private'));
 //Chat routes
 app.use('/api/chat',require('./routes/chat/chat'));
 
+//Emoji uploading api
+app.use('/api/emoji',require('./routes/emoji/emoji'));
+
 const server=app.listen(port,()=>{
     console.log(`Server is running at http://localhost:${port}`);
 })
@@ -57,10 +60,10 @@ io.on("connection",(socket)=>{
         // console.log(roomId);
         socket.join(roomId);
     })
-    socket.on("sendmessage",async({userId,roomId,message})=>{
+    socket.on("sendmessage",async({userId,roomId,message,isImage})=>{
         const chat=await Chat.findOneAndUpdate({_id:roomId},{
             $push:{
-                allMessages:{senderId:userId,message,time:moment().format()}
+                allMessages:{senderId:userId,message,time:moment().format(),isImage}
             }
         },{new:true})
         console.log(userId);

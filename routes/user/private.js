@@ -1,5 +1,5 @@
 const router=require('express').Router();
-const {buyServices,order,capture,buyImage,getArtist,getAService,readFile,getOwnDetails,getAlbum,giveFeedback,removeimageAccess,subscribe, unsubscribe,getServiceWithName,completePayment,getPaymentsOfAUser,dedudctBalanceWhileChatting,getAllImagesOfAnArtist,getAllAlbumsOfAnArtist,getAParticularAlbum, getImageTimestamp,checkIfSubscribed,getAParticularImage}=require('../../controllers/user/private');
+const {buyServices,order,capture,buyImage,getArtist,getAService,readFile,getOwnDetails,getAlbum,giveFeedback,removeimageAccess,subscribe, unsubscribe,getServiceWithName,completePayment,getPaymentsOfAUser,dedudctBalanceWhileChatting,getAllImagesOfAnArtist,getAllAlbumsOfAnArtist,getAParticularAlbum, getImageTimestamp,checkIfSubscribed,getAParticularImage,getEmojies,giveEmoji}=require('../../controllers/user/private');
 const {protectUser}=require('../../middlewares/protect');
 
 //Get own details
@@ -178,12 +178,29 @@ router.put('/completepayment',protectUser,completePayment);
 //Token : Yes
 router.get('/getpaymentsofauser',protectUser,getPaymentsOfAUser);
 
-//
+//Deduct balance
 //Route : '/api/user/private/deductbalance'
 //Method : PUT
 //Body : {roomId}
 //Params : N/A
 //Token : Yes
 router.put('/deductbalance',protectUser,dedudctBalanceWhileChatting);
+
+
+//Get emojies
+//Route : '/api/user/private/getemojies'
+//Method : GET
+//Body : N/A
+//Params : N/A
+//Token : Yes
+router.get('/getemojies',protectUser,getEmojies);
+
+//Give emoji
+//Route : '/api/user/private/giveemoji'
+//Method : POST
+//Body : {emojiId,artistId}
+//Params : N/A
+//Token : Yes
+router.post('/giveemoji',protectUser,giveEmoji);
 
 module.exports=router;

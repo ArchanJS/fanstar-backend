@@ -5,6 +5,7 @@ const Album=require('../../models/Album');
 const Payment=require('../../models/Payment');
 const Chat=require('../../models/Chat');
 const Image = require('../../models/Image');
+const Emoji=require('../../models/Emoji');
 const {readImage}=require('../../controllers/artist/aws');
 const Razorpay = require('razorpay');
 const request = require('request');
@@ -523,5 +524,52 @@ exports.dedudctBalanceWhileChatting=async(req,res)=>{
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Something went wrong!" });
+  }
+}
+
+// Get emojies
+exports.getEmojies=async(req,res)=>{
+  try {
+    const emojies=await Emoji.find();
+    res.status(200).send(emojies);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Something went wrong!" });
+  }
+}
+
+//Give emoji
+exports.giveEmoji=async(req,res)=>{
+  try {
+    const {emojiId,artistId}=req.body;
+    const emoji=await Emoji.findOne({_id:emojiId});
+    let price=emoji.price;
+    let uBalance = parseFloat(req.user.balance);
+      if (uBalance >= price) {
+        const artist = await Artist.findOne({ _id: artistId });
+        let aBalance = parseFloat(artist.balance);
+        aBalance = aBalance + (price * parseFloat(artist.commission) / 100.00);
+        aBalance = aBalance.toString();
+        await Artist.updateOne({ _id: artistId }, {
+          $set: {
+            balance: aBalance
+          }
+        })
+        uBalance = uBalance - price;
+        uBalance = uBalance.toString();
+        await User.updateOne({ _id: req.user._id }, {
+          $set: {
+            balance: uBalance
+          }
+        })
+        price=price.toString();
+        const payment=new Payment({artistId,userId:req.user._id,amount:price,isAlbum:true,status:"completed"});
+        await payment.save();
+        res.status(200).json({ message: "Emoji bought!" });
+      }
+      else res.status(400).json({ error: "User doesn't have enough balance!" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({error:"Something went wrong!"});
   }
 }
