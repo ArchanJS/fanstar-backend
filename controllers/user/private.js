@@ -380,7 +380,7 @@ exports.checkIfSubscribed=async(req,res)=>{
         ts=e.time;
       }
     })
-    if(isSubscriber==false) res.status(200).json({isSubscriber:false});
+    if(isSubscriber==false) res.status(200).json({isSubscriber:false,recentlyExpired:false});
     else{
       const time=new Date()-new Date(ts);
       if(time<2592000000) res.status(200).json({isSubscriber:true});
@@ -395,7 +395,7 @@ exports.checkIfSubscribed=async(req,res)=>{
         //     status:"completed"
         //   }
         // })
-        res.status(200).json({isSubscriber:false});
+        res.status(200).json({isSubscriber:false,recentlyExpired:true});
       }
     }
   } catch (error) {

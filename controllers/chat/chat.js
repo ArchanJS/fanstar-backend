@@ -21,7 +21,7 @@ exports.createChat=async(req,res)=>{
 exports.getAChat=async(req,res)=>{
     try {
         const {roomId}=req.params;
-        let chat=await Chat.findOne({_id:roomId});
+        let chat=await Chat.findOne({_id:roomId}).populate("paymentId");
         res.status(200).send(chat);
     } catch (error) {
         console.log(error);
@@ -57,7 +57,7 @@ exports.fetchAllChatsOfAnArtist=async(req,res)=>{
 exports.fetchAllChatsOfAnUser=async(req,res)=>{
     try {
         const userId=req.user._id;
-        const chats=await Chat.find({userIds:{$in:[userId]}});
+        const chats=await Chat.find({userIds:{$in:[userId]}}).populate("paymentId");
         // const users=await User.find();
         // let messArr=[];
         // for(let i=0;i<chats.length;i++){
