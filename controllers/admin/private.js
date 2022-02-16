@@ -320,6 +320,7 @@ exports.getListOfArtist=async(req,res)=>{
             retArr.push({
                 artistId:artists[i]._id,
                 artistName:artists[i].username,
+                appName:artists[i].appName,
                 startDate:artists[i].createdAt,
                 address:artists[i].address,
                 totalOrders,
