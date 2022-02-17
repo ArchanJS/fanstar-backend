@@ -22,6 +22,10 @@ const userSchema=new mongoose.Schema({
     },
     insta:{
         type:String
+    },
+    blocked:{
+        type:Boolean,
+        default:false
     }
 },{timestamps:true})
 

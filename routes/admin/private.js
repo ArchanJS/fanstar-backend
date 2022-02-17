@@ -1,6 +1,6 @@
 const router=require('express').Router();
 const{protectAdmin}=require('../../middlewares/protect');
-const {getAllArtists,getAllUsers,getAllEmployees, createArtist, blockUnblockArtist, getAnArtist, updateAnArtist, deleteAnArtist, createAnEmployee, blockUnblockEmployee, getAnEmployee, updateAnEmployee, deleteAnEmployee,getAllPayments,getOrdersofAnArtist,getPaymentOfAnArtist, getListOfArtist, getArtistsOfAnEmployee,getTotalSubscribers,getTotalAppVisits,generateTokenOfAnArtist,getListOfEmployees,getPaymentsOfArtistsOfAnEmployee,getAllPaymentsOfUsers,updateArtistBalance,getWithdrawalsOfAnArtist}=require('../../controllers/admin/private');
+const {getAllArtists,getAllUsers,getAllEmployees, createArtist, blockUnblockArtist, blockUnblockUser,getAnArtist, updateAnArtist, deleteAnArtist, createAnEmployee, blockUnblockEmployee, getAnEmployee, updateAnEmployee, deleteAnEmployee,getAllPayments,getOrdersofAnArtist,getPaymentOfAnArtist, getListOfArtist, getArtistsOfAnEmployee,getTotalSubscribers,getTotalAppVisits,generateTokenOfAnArtist,getListOfEmployees,getPaymentsOfArtistsOfAnEmployee,getAllPaymentsOfUsers,updateArtistBalance,getWithdrawalsOfAnArtist}=require('../../controllers/admin/private');
 
 //Get all artists
 //Route : '/api/admin/private/getallartists'
@@ -41,6 +41,14 @@ router.post('/createartist',protectAdmin,createArtist);
 //Params : N/A
 //Token : Yes
 router.put('/blockunblockartist',protectAdmin,blockUnblockArtist);
+
+//Block-unblock user
+//Route : '/api/admin/private/blockunblockuser'
+//Method : PUT
+//Body : {userId}
+//Params : N/A
+//Token : Yes
+router.put('/blockunblockuser',protectAdmin,blockUnblockUser);
 
 //Get an artist
 //Route : '/api/admin/private/getanartist/:artistId'

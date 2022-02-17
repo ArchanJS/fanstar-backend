@@ -21,6 +21,11 @@ exports.getAllArtists=async(req,res)=>{
 exports.getAllUsers=async(req,res)=>{
     try {
         const users=await User.find().sort({createdAt:-1});
+        users.sort(function(a,b){
+            // Turn your strings into dates, and then subtract them
+            // to get a value that is either negative, positive, or zero.
+            return new Date(b.createdAt) - new Date(a.createdAt);
+          });
         res.status(200).send(users);
     } catch (error) {
         console.log(error);
@@ -56,6 +61,24 @@ exports.createArtist=async(req,res)=>{
             res.status(201).json({message:"Artist created!"});
         }
 
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Something went wrong!"});
+    }
+}
+
+//Block-unblock user
+exports.blockUnblockUser=async(req,res)=>{
+    try {
+        const user=await User.findOne({_id:req.body.userId});
+        let blocked=user.blocked?false:true;
+        let message=user.blocked?"User unblocked":"User blocked";
+        await User.findOneAndUpdate({_id:req.body.userId},{
+            $set:{
+                blocked
+            }
+        })
+        res.status(200).json({message});
     } catch (error) {
         console.log(error);
         res.status(500).json({error:"Something went wrong!"});
@@ -256,6 +279,11 @@ exports.getAllPayments=async(req,res)=>{
         else {
             payments=await Payment.find().populate("artistId");
         }
+        payments.sort(function(a,b){
+            // Turn your strings into dates, and then subtract them
+            // to get a value that is either negative, positive, or zero.
+            return new Date(b.createdAt) - new Date(a.createdAt);
+          });
         res.status(200).send(payments);
     } catch (error) {
         console.log(error);
