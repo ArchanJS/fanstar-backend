@@ -38,6 +38,7 @@ exports.generateOTP = async (req, res) => {
   }
 }
 
+
 //Verify OTP
 exports.verify = async (req, res) => {
   const { phone, code } = req.body;
