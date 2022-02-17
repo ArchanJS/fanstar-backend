@@ -20,7 +20,7 @@ exports.getAllArtists=async(req,res)=>{
 //Get users
 exports.getAllUsers=async(req,res)=>{
     try {
-        const users=await User.find();
+        const users=await User.find().sort({createdAt:-1});
         res.status(200).send(users);
     } catch (error) {
         console.log(error);
@@ -110,6 +110,11 @@ exports.getPaymentOfAnArtist=async(req,res)=>{
         const servicePayments=await Payment.find({artistId:req.params.artistId,isAlbum:false}).populate("userId").populate("serviceId");
         const albumPayments=await Payment.find({artistId:req.params.artistId,isAlbum:true}).populate("userId");
         const payments=[...servicePayments,...albumPayments];
+        payments.sort(function(a,b){
+            // Turn your strings into dates, and then subtract them
+            // to get a value that is either negative, positive, or zero.
+            return new Date(b.createdAt) - new Date(a.createdAt);
+          });
         res.status(200).send(payments);
     } catch (error) {
         console.log(error);
@@ -228,14 +233,14 @@ exports.getAllPayments=async(req,res)=>{
             if(req.body.field.trim().length==24){
                 payments=await Payment.find({
                     _id: req.body.field
-                }).populate("artistId");
+                }).sort({createdAt:-1}).populate("artistId");
             }
             if(payments.length==0){
                 const artists=await Artist.find({
                     username: { $regex: req.body.field, $options: "i" }
                 })
                 // console.log(artists);
-                const allPayments=await Payment.find().populate("artistId");
+                const allPayments=await Payment.find().sort({createdAt:-1}).populate("artistId");
                 payments=[];
                 for(let i=0;i<artists.length;i++){
                     for(let j=0;j<allPayments.length;j++){
