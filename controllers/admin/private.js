@@ -260,7 +260,10 @@ exports.getAllPayments=async(req,res)=>{
             }
             if(payments.length==0){
                 const artists=await Artist.find({
-                    username: { $regex: req.body.field, $options: "i" }
+                    $or:[
+                        {username: { $regex: req.body.field, $options: "i" }},
+                        {phone: { $regex: req.body.field, $options: "i" }}
+                    ]
                 })
                 // console.log(artists);
                 const allPayments=await Payment.find().sort({createdAt:-1}).populate("artistId");
