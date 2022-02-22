@@ -46,9 +46,9 @@ exports.getOwnPendingOrders = async(req, res) => {
 //Update profile
 exports.updateProfile = async(req, res) => {
     try {
-        const { username, profilePhoto, bio } = req.body;
+        const { username, profilePhoto, bio, coverPhoto } = req.body;
         await Artist.updateOne({ _id: req.artist._id }, {
-            $set: { username, profilePhoto, bio }
+            $set: { username, profilePhoto, bio, coverPhoto }
         })
         res.status(200).json({ message: "Profile updated!" });
     } catch (error) {
