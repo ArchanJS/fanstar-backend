@@ -175,8 +175,8 @@ exports.getOwnServices = async(req, res) => {
 //Create an album
 exports.createAlbum = async(req, res) => {
     try {
-        const files = req.files;
-        console.log(files);
+        // const files = req.files;
+        // console.log(files);
         const { albumName, description, price } = req.body;
         const album = new Album({
             albumName,
@@ -185,17 +185,17 @@ exports.createAlbum = async(req, res) => {
             description
         })
         await album.save();
-        for (let i = 0; i < files.length; i++) {
-            let data = await uploadImage(files[i]);
-            await Album.findOneAndUpdate({ _id: album._id }, {
-                $push: {
-                    images: data
-                }
-            })
-            unlinkFile(files[i].path);
-        }
+        // for (let i = 0; i < files.length; i++) {
+        //     let data = await uploadImage(files[i]);
+        //     await Album.findOneAndUpdate({ _id: album._id }, {
+        //         $push: {
+        //             images: data
+        //         }
+        //     })
+        //     unlinkFile(files[i].path);
+        // }
         // console.log(files);
-        res.status(201).json({ message: "Photo(s) uploaded!" });
+        res.status(201).json({ albumId:album._id });
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: "Something went wrong!" });
