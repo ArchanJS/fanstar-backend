@@ -1,6 +1,6 @@
 const router=require('express').Router();
 const{protectAdmin}=require('../../middlewares/protect');
-const {getAllArtists,getAllUsers,getAllEmployees, createArtist, blockUnblockArtist, blockUnblockUser,getAnArtist, updateAnArtist, deleteAnArtist, createAnEmployee, blockUnblockEmployee, getAnEmployee, updateAnEmployee, deleteAnEmployee,getAllPayments,getOrdersofAnArtist,getPaymentOfAnArtist, getListOfArtist, getArtistsOfAnEmployee,getTotalSubscribers,getTotalAppVisits,generateTokenOfAnArtist,getListOfEmployees,getPaymentsOfArtistsOfAnEmployee,getAllPaymentsOfUsers,updateArtistBalance,getWithdrawalsOfAnArtist}=require('../../controllers/admin/private');
+const {getAllArtists,getAllUsers,getAllEmployees, createArtist, blockUnblockArtist, blockUnblockUser,getAnArtist, updateAnArtist, deleteAnArtist, createAnEmployee, blockUnblockEmployee, getAnEmployee, updateAnEmployee, deleteAnEmployee,getAllPayments,getOrdersofAnArtist,getPaymentOfAnArtist, getListOfArtist, getArtistsOfAnEmployee,getTotalSubscribers,getTotalAppVisits,generateTokenOfAnArtist,getListOfEmployees,getPaymentsOfArtistsOfAnEmployee,getAllPaymentsOfUsers,updateArtistBalance,getWithdrawalsOfAnArtist,addArtistAccount,addEmployeeAccount}=require('../../controllers/admin/private');
 
 //Get all artists
 //Route : '/api/admin/private/getallartists'
@@ -226,5 +226,21 @@ router.put('/updateanartistbalance',protectAdmin,updateArtistBalance);
 //Params : {artistId}
 //Token : Yes
 router.get('/getwithdrawals/:artistId',protectAdmin,getWithdrawalsOfAnArtist);
+
+//Add account details of an artist
+//Route : '/api/admin/private/addartistaccount/:artistId'
+//Method : PUT
+//Body : {accountNo,ifscCode,upiId}
+//Params : {artistId}
+//Token : Yes
+router.put('/addartistaccount/:artistId',protectAdmin,addArtistAccount);
+
+//Add account details of an employee
+//Route : '/api/admin/private/addemployeeaccount/:employeeId'
+//Method : PUT
+//Body : {accountNo,ifscCode,upiId}
+//Params : {employeeId}
+//Token : Yes
+router.put('/addemployeeaccount/:employeeId',protectAdmin,addEmployeeAccount);
 
 module.exports=router;

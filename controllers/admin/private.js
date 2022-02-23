@@ -516,3 +516,35 @@ exports.getWithdrawalsOfAnArtist=async(req,res)=>{
         res.status(500).json({error:"Something went wrong!"});
     }
 }
+
+//Add account details of an Artist
+exports.addArtistAccount=async(req,res)=>{
+    try {
+        const {accountNo,ifscCode,upiId}=req.body;
+        await Artist.findOneAndUpdate({_id:req.params.artistId},{
+            $set:{
+                accountNo,ifscCode,upiId
+            }
+        })
+        res.status(200).json({message:"Artist account updated!"});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Something went wrong!"});
+    }
+}
+
+//Add account details of an employee
+exports.addEmployeeAccount=async(req,res)=>{
+    try {
+        const {accountNo,ifscCode,upiId}=req.body;
+        await Artist.findOneAndUpdate({_id:req.params.employeeId},{
+            $set:{
+                accountNo,ifscCode,upiId
+            }
+        })
+        res.status(200).json({message:"Employee account updated!"});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Something went wrong!"});
+    }
+}
