@@ -383,7 +383,7 @@ exports.checkIfSubscribed=async(req,res)=>{
     if(isSubscriber==false) res.status(200).json({isSubscriber:false,recentlyExpired:false});
     else{
       const time=new Date()-new Date(ts);
-      if(time<2592000000) res.status(200).json({isSubscriber:true});
+      if(time<300000) res.status(200).json({isSubscriber:true});
       else{
         await Album.findOneAndUpdate({_id:req.body.albumId},{
           $pull:{
