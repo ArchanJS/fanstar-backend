@@ -23,6 +23,9 @@ const userSchema=new mongoose.Schema({
     insta:{
         type:String
     },
+    location:{
+        type:String
+    },
     blocked:{
         type:Boolean,
         default:false

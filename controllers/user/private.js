@@ -165,7 +165,7 @@ exports.getAlbum=async(req,res)=>{
 //Buy service
 exports.buyServices = async (req, res) => {
   try {
-    const { serviceId,username,email,phone,insta } = req.body;
+    const { serviceId,username,email,phone,insta,location } = req.body;
     const service = await Service.findOne({ _id: serviceId });
     if (!service) res.status(400).json({ error: "Service not found!" });
     else {
@@ -176,7 +176,7 @@ exports.buyServices = async (req, res) => {
           $push: {
             users: {
               userId:req.user._id,
-            username,email,phone,insta}
+            username,email,phone,insta,location}
           }
         })
         const artist = await Artist.findOne({ _id: service.createdBy });
