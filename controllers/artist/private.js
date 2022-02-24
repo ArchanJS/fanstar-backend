@@ -205,15 +205,15 @@ exports.createAlbum = async(req, res) => {
 //Add image to an album
 exports.updateAlbum = async(req, res) => {
     try {
-        const files = req.files;
-        for (let i = 0; i < files.length; i++) {
-            let data = await uploadImage(files[i]);
+        const {images} = req.body;
+        for (let i = 0; i < images.length; i++) {
+            // let data = await uploadImage(files[i]);
             await Album.findOneAndUpdate({ _id: req.params.albumId }, {
                 $push: {
-                    images: data
+                    images: images[i]
                 }
             })
-            unlinkFile(files[i].path);
+            // unlinkFile(files[i].path);
         }
         // await Album.findOneAndUpdate({_id:req.params.albumId},{
         //     $push:{

@@ -52,7 +52,13 @@ const server=app.listen(port,()=>{
 })
 
 //Socket-io
-const io=require('socket.io')(server);
+const io=require('socket.io')(server,
+    {
+        cors: {
+          origin: "http://localhost:3080",
+          methods: ["GET", "POST"]
+        }
+    });
 
 io.on("connection",(socket)=>{
     console.log("Connected to socket!");
