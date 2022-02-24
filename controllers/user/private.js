@@ -198,7 +198,7 @@ exports.buyServices = async (req, res) => {
         const payment=new Payment({artistId:service.createdBy,userId:req.user,serviceName:service.serviceName,serviceDescription:service.description,amount:service.amount,serviceId:service._id,status:"pending"});
         await payment.save();
         await User.findOneAndUpdate({phone:req.user.phone},{
-          $set:{username,email,insta}
+          $set:{username,email,insta,location}
         });
         
         let chat=await Chat.findOne({$and:[{userIds:{$all:[artist._id,req.user._id]}},{paymentId:payment._id}]});
