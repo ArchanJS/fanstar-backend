@@ -22,9 +22,13 @@ const employeeSchema=new mongoose.Schema({
     address:{
         type:String
     },
+    
     balance:{
         type:String,
         default:"0.00"
+    },
+    commission:{
+        type:String
     },
     profilePhoto:{
         type:String,

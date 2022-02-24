@@ -40,7 +40,8 @@ const artistSchema=new mongoose.Schema({
         default:"black"
     },
     commission:{
-        type:String
+        type:String,
+        default:"70"
     },
     chatPrice:{
         type:String

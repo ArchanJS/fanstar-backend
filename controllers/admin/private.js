@@ -189,11 +189,11 @@ exports.getAnEmployee=async(req,res)=>{
 //Create employee
 exports.createAnEmployee=async(req,res)=>{
     try {
-        const {username,phone,email,address,accountNo,ifscCode,upiId}=req.body;
+        const {username,phone,email,address,accountNo,commission,ifscCode,upiId}=req.body;
         let employee=await Employee.findOne({phone});
         if(employee) res.status(400).json({error:"Employee already exists!"});
         else {
-            employee=new Employee({username,phone,email,address,accountNo,ifscCode,upiId});
+            employee=new Employee({username,phone,email,address,accountNo,commission,ifscCode,upiId});
             await employee.save();
             res.status(201).json({message:"Employee account created!"});
         }
