@@ -2,6 +2,7 @@ const User = require('../../models/User');
 const Artist = require('../../models/Artist');
 const Service = require('../../models/Service');
 const Album = require('../../models/Album');
+const Chat = require('../../models/Chat');
 const twilio = require('twilio')(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN);
 
 //Generate OTP
@@ -54,6 +55,11 @@ exports.verify = async (req, res) => {
     }
     else {
       const user = await User.findOne({ phone });
+      let chat=await Chat.findOne({$and:[{userIds:{$all:[req.body.artistId,user._id]}},{paymentId:null}]});
+      if(!chat) {
+        chat=new Chat({userIds:[req.body.artistId,user._id]});
+        await chat.save();
+      }
       const token = await user.generateToken();
       res.status(200).send(token);
     }
