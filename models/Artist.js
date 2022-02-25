@@ -44,7 +44,8 @@ const artistSchema=new mongoose.Schema({
         default:"70"
     },
     chatPrice:{
-        type:String
+        type:String,
+        default:"60"
     },
     feedbacks:[{
         userId:{
