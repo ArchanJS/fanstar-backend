@@ -201,11 +201,11 @@ exports.buyServices = async (req, res) => {
           $set:{username,email,insta,location}
         });
         
-        let chat=await Chat.findOne({$and:[{userIds:{$all:[artist._id,req.user._id]}},{paymentId:payment._id}]});
-        if(!chat) {
-            chat=new Chat({userIds:[artist._id,req.user._id],paymentId:payment._id});
-            await chat.save();
-        }
+        // let chat=await Chat.findOne({$and:[{userIds:{$all:[artist._id,req.user._id]}},{paymentId:payment._id}]});
+        // if(!chat) {
+        //     chat=new Chat({userIds:[artist._id,req.user._id],paymentId:payment._id});
+        //     await chat.save();
+        // }
 
 
         res.status(200).json({ message: "Service added!" });
@@ -422,8 +422,13 @@ exports.getImageTimestamp=async(req,res)=>{
 //Give feedback
 exports.giveFeedback=async(req,res)=>{
   try {
-    const {artistId,stars,message}=req.body;
-    await Artist.findOneAndUpdate({_id:artistId,'feedbacks.userId':{$ne:req.user._id}},{
+    const {paymentId,stars,message}=req.body;
+    const payment=await Payment.findOneAndUpdate({_id:paymentId},{
+      $set:{
+        feedback:true
+      }
+    },{new:true})
+    await Service.findOneAndUpdate({_id:payment.serviceId,'feedbacks.userId':{$ne:req.user._id}},{
       $addToSet:{
         feedbacks:{
           userId:req.user._id,
@@ -573,3 +578,17 @@ exports.giveEmoji=async(req,res)=>{
     res.status(500).json({error:"Something went wrong!"});
   }
 }
+
+//Check if pending service is is available
+exports.checkIfPendingAvailable=async(req,res)=>{
+  try {
+    const payment=await Payment.findOne({
+      $and:[{userId:req.user._id},{status:"pending"}]
+    });
+    if(payment) res.status(200).json({available:true});
+    else res.status(200).json({available:false});
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({error:"Something went wrong!"});
+  }
+} 

@@ -143,14 +143,14 @@ exports.completePayment = async(req, res) => {
                     doneForArtist: true
                 }
             }, { new: true })
-            if (payment.doneForUser == true) {
-                await Payment.findOneAndUpdate({ _id: payment._id }, {
-                    $set: {
-                        status: "completed"
-                    }
-                })
-                await Chat.deleteOne({ paymentId: req.body.paymentId });
-            }
+            await Payment.findOneAndUpdate({ _id: payment._id }, {
+                $set: {
+                    status: "completed"
+                }
+            })
+            // if (payment.doneForUser == true) {
+            //     await Chat.deleteOne({ paymentId: req.body.paymentId });
+            // }
             res.status(200).json({ message: "Marked as done!" });
         } else {
             res.status(400).send({ error: "Can't change status!" });

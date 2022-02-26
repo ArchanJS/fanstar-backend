@@ -1,5 +1,5 @@
 const router=require('express').Router();
-const {buyServices,order,capture,buyImage,getArtist,getAService,readFile,getOwnDetails,getAlbum,giveFeedback,removeimageAccess,subscribe, unsubscribe,getServiceWithName,completePayment,getPaymentsOfAUser,dedudctBalanceWhileChatting,getAllImagesOfAnArtist,getAllAlbumsOfAnArtist,getAParticularAlbum, getImageTimestamp,checkIfSubscribed,getAParticularImage,getEmojies,giveEmoji}=require('../../controllers/user/private');
+const {buyServices,order,capture,buyImage,getArtist,getAService,readFile,getOwnDetails,getAlbum,giveFeedback,removeimageAccess,subscribe, unsubscribe,getServiceWithName,completePayment,getPaymentsOfAUser,dedudctBalanceWhileChatting,getAllImagesOfAnArtist,getAllAlbumsOfAnArtist,getAParticularAlbum, getImageTimestamp,checkIfSubscribed,getAParticularImage,getEmojies,giveEmoji,checkIfPendingAvailable}=require('../../controllers/user/private');
 const {protectUser}=require('../../middlewares/protect');
 
 //Get own details
@@ -202,5 +202,13 @@ router.get('/getemojies',protectUser,getEmojies);
 //Params : N/A
 //Token : Yes
 router.post('/giveemoji',protectUser,giveEmoji);
+
+//Check if pending payment is available
+//Route : '/api/user/private/ispendingavailable'
+//Method : GET
+//Body : N/A
+//Params : N/A
+//Token : Yes
+router.get('/ispendingavailable',protectUser,checkIfPendingAvailable);
 
 module.exports=router;

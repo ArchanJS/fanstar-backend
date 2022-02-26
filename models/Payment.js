@@ -45,6 +45,10 @@ const paymentSchema=new mongoose.Schema({
         type:Boolean,
         default:false
     },
+    feedback:{
+        type:Boolean,
+        default:false
+    },
     status:{
         type:String,
         requierd:true

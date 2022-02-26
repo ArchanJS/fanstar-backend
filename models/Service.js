@@ -47,6 +47,18 @@ const serviceSchema=new mongoose.Schema({
             type:String,
             default:moment().format()
         }
+    }],
+    feedbacks:[{
+        userId:{
+            type:mongoose.Schema.Types.ObjectId,
+            ref:'user'
+        },
+        stars:{
+            type:Number
+        },
+        message:{
+            type:String
+        }
     }]
 },{timestamps:true})
 
