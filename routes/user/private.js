@@ -193,7 +193,7 @@ router.put('/deductbalance',protectUser,dedudctBalanceWhileChatting);
 //Body : N/A
 //Params : N/A
 //Token : Yes
-router.get('/getemojies',protectUser,getEmojies);
+router.get('/getemojies',getEmojies);
 
 //Give emoji
 //Route : '/api/user/private/giveemoji'

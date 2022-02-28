@@ -535,7 +535,7 @@ exports.dedudctBalanceWhileChatting=async(req,res)=>{
 // Get emojies
 exports.getEmojies=async(req,res)=>{
   try {
-    const emojies=await Emoji.find();
+    const emojies=await Emoji.find().sort({createdAt:1});
     res.status(200).send(emojies);
   } catch (error) {
     console.log(error);
