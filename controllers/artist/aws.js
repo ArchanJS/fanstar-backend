@@ -17,7 +17,7 @@ exports.uploadImage = async (file) => {
       Body: fileStream,
     }
     const data = await s3.upload(params).promise()
-    return data.key
+    return data.Key
   } catch (error) {
     console.log(error)
     throw new Error("Something went wrong!");
