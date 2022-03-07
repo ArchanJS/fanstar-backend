@@ -613,8 +613,9 @@ exports.getPaymentsOfArtistsOfAnEmployee = async (req, res) => {
 //Update an artist's balance
 exports.updateArtistBalance = async (req, res) => {
   try {
-    const withdraw = await Withdraw.findOne({ _id: req.body.withdrawId });
-    const artist = await Artist.findOne({ _id: withdraw.artistId });
+    // const withdraw = await Withdraw.findOne({ _id: req.body.withdrawId });
+    // console.log(req.body);
+    const artist = await Artist.findOne({ _id: req.body.artistId });
     const artistBalance = parseInt(artist.balance);
     let balance =
       artistBalance - parseInt(req.body.amount) > 0
@@ -625,17 +626,17 @@ exports.updateArtistBalance = async (req, res) => {
     paid.toString();
     balance = balance.toString();
     await Artist.findOneAndUpdate(
-      { _id: withdraw.artistId },
+      { _id: req.body.artistId },
       {
         $set: { balance, paid },
       }
     );
-    await Withdraw.findOneAndUpdate(
-      { _id: req.body.withdrawId },
-      {
-        $set: { status: 'completed' },
-      }
-    );
+    // await Withdraw.findOneAndUpdate(
+    //   { _id: req.body.withdrawId },
+    //   {
+    //     $set: { status: 'completed' },
+    //   }
+    // );
     res.status(200).json({ message: 'Artists balance updated!' });
   } catch (error) {
     console.log(error);
